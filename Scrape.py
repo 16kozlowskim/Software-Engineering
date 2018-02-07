@@ -2,6 +2,7 @@
 
 from alpha_vantage.timeseries import TimeSeries
 from pprint import pprint
+import sys
 
 ts = TimeSeries(key='45SBWT4C6DPHUPNR', output_format='pandas')
 
@@ -10,46 +11,57 @@ ts = TimeSeries(key='45SBWT4C6DPHUPNR', output_format='pandas')
 # data, meta_data = ts.get_monthly(symbol='ABF')
 # pprint(data)
 
+
 def getRow(abbreviation):
-    data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
-    return data.iloc[-1]
+		data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
+		return data.iloc[-1]
 
 def currentPrice(abbreviation):
-    data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
-    return data.iloc[-1]["4. close"]
+		#print("Printing current price of "+abbreviation)
+		data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
+		return data.iloc[-1]["4. close"]
 
 def priceMinutesAgo(abbreviation, minutes):
-    if(minutes <= 100):
-        data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
-        return data.iloc[-minutes-1]["4. close"]
-    elif(minutes < 100 * 15):
-        steps = int(round(minutes / 15.0))
-        data, meta_data = ts.get_intraday(symbol=abbreviation,interval='15min', outputsize='compact')
-        return data.iloc[-steps-1]["4. close"]
-    else:
-        raise ValueError("Must be less than 1500 minutes")
+		if(minutes <= 100):
+				data, meta_data = ts.get_intraday(symbol=abbreviation,interval='1min', outputsize='compact')
+				return data.iloc[-minutes-1]["4. close"]
+		elif(minutes < 100 * 15):
+				steps = int(round(minutes / 15.0))
+				data, meta_data = ts.get_intraday(symbol=abbreviation,interval='15min', outputsize='compact')
+				return data.iloc[-steps-1]["4. close"]
+		else:
+				raise ValueError("Must be less than 1500 minutes")
 
 def priceDaysAgo(abbreviation, days):
-    if(days <= 100):
-        data, meta_data = ts.get_daily(symbol=abbreviation, outputsize='compact')
-        return data.iloc[-days-1]["4. close"]
-    else:
-        raise ValueError("Must be less than 100 days")
+		if(days <= 100):
+				data, meta_data = ts.get_daily(symbol=abbreviation, outputsize='compact')
+				return data.iloc[-days-1]["4. close"]
+		else:
+				raise ValueError("Must be less than 100 days")
 
 def priceMonthsAgo(abbreviation, months):
-    data, meta_data = ts.get_monthly(symbol=abbreviation)
-    return data.iloc[-months-1]["4. close"]
+		data, meta_data = ts.get_monthly(symbol=abbreviation)
+		return data.iloc[-months-1]["4. close"]
 
 def priceAtTime(abbreviation, timestamp):
-    # TODO: infer relative time from current time and timestamp;
-    pass
+		# TODO: infer relative time from current time and timestamp;
+		pass
 
 # TODO: extend for other parameters than price
 # TODO: test more stocks and times
-# TODO: figure out sector indicators
+# TODO: figure out sector indicators -- use Google Finance API?
 
 def main():
-    print(currentPrice('ABF'))
+	args = sys.argv
+	if(len(args) < 3):
+		print("Requires at least 2 args")
+		exit(-1)
+	mode = args[1].lower()
+	abbr = args[2]
+	if(mode == "currentprice"):
+		print(currentPrice(abbr))
+	elif(mode == "priceminutesago"):
+		print(priceMinutesAgo(abbr, args[3]))
 
 if __name__ == "__main__":
-    main()
+		main()
