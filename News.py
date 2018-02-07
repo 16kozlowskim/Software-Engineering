@@ -1,6 +1,5 @@
 import feedparser, sys
 
-# Provide the full name of a stock, get list of headlines
 # TODO: extend to return links, sources etc.
 
 def getRss(stock):
@@ -15,13 +14,24 @@ def getHeadlines(rss):
 		headlines.append((e['title']).encode('utf-8'))
 	return headlines
 
+def getSummary(rss):
+	entries = rss['entries']
+	data = []
+	for e in entries:
+		data.append([(e['title']).encode('utf-8'), (e['link']).encode('utf-8')])
+	return data
+
 def main():
 	args = sys.argv
-	if(len(args) < 2):
-		print("Needs at least 1 arg")
+	if(len(args) < 3):
+		print("Needs at least 2 args")
 		exit(0)
-	name = args[1]
-	print(getHeadlines(getRss(name)))
+	cmnd = args[1].lower()
+	name = args[2]
+	if(cmnd == "getheadlines"):
+		print(getHeadlines(getRss(name)))
+	elif(cmnd == "getsummary"):
+		print(getSummary(getRss(name)))
 	
 if __name__ == "__main__":
 	main()
