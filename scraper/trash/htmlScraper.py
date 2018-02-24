@@ -29,6 +29,10 @@ for elem in page_list:
         cols = [ele.text.strip() for ele in cols]
         data.append([ele for ele in cols if ele])
 
-with open('../fileStore/companyData2.csv', 'w') as csvfile:
-    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
-    wr.writerows(data)
+#with open('../fileStore/companyData2.csv', 'w') as csvfile:
+#    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+#    wr.writerows(data)
+
+wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
+
+wr.writerows(data)

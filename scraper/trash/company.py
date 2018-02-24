@@ -14,17 +14,9 @@ def get_ftse_companies():
     table_body = table.find('tbody')
     rows = table_body.find_all('tr')
     for row in rows:
-        cols = row.find_all('td')
-        cols = [ele.text.strip() for index, ele in enumerate(cols) if index < 2]
-        data.append([ele for ele in cols if ele])
-
-    #with open('../fileStore/companyTicker.csv', 'w') as csvfile:
-    #    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
-    #    wr.writerows(data)
-
-    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
-
-    wr.writerows(data)
+        cols = row.find('td', attrs={'class' : 'name-col align-left'})
+        link = cols.find('a')
+        print link.get('href')
 
 def main():
 

@@ -29,13 +29,18 @@ def get_risers_fallers(type):
     file_builder.append('.csv')
     file_path = ''.join(file_builder)
 
-    with open(file_path, 'w') as csvfile:
-        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
-        wr.writerows(data)
+    #with open(file_path, 'w') as csvfile:
+    #    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+    #    wr.writerows(data)
+
+    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
+
+    wr.writerows(data)
 
 def main():
-    get_risers_fallers('fallers')
-    get_risers_fallers('risers')
+    args = sys.argv
+
+    get_risers_fallers(args[1])
 
 if __name__ == '__main__':
     main()
