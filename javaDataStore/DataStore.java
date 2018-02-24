@@ -17,13 +17,8 @@ public class DataStore {
 
     // General data
     sectorNum = new HashMap<String, String>();
-  }
-
-  public void fillCompanyInfo() {
     companyInfo = DataBridge.fillCompany();
-  }
 
-  public void fillSectorNum() {
     sectorNums.put("Aerospace & Defense", "2710");
     sectorNums.put("Alternative Energy", "0580");
     sectorNums.put("Automobiles & Parts", "3350");
