@@ -39,6 +39,17 @@ public class DataBridge {
 
   }*/
 
+  /**
+   * Returns data for a particular company
+   * @param  String      ticker        has to be fetched from companyInfo in
+   *                                   DataStore
+   * @return             [spot price, absolute change, % change, low-high in latest
+   *                      trading day, 52-week low-high, opening price on latest trading
+   *                      day, volume/avg volume, Mkt cap, PE ratio, latest dividen/
+   *                      divident yield, earnings per share, shares, beta, institutional
+   *                      ownership]
+   * @throws IOException
+   */
   public static String[] getCompanyData(String ticker) throws IOException {
     String cmd = "python googScraper.py "+ticker;
     String s = "";
@@ -58,8 +69,13 @@ public class DataBridge {
 
     return data;
   }
-
-  public static HashMap<String, String[]> getRisersFallers(Boolean getRisers) throws IOException {
+  /**
+   * Gets the risers and faller on ftse
+   * @param  Boolean     getRisers     set true if you want risers, false for fallers
+   * @return             [ticker, company name, spot price, absolute day change, % day change]
+   * @throws IOException
+   */
+  public static ArrayList<String[]> getRisersFallers(Boolean getRisers) throws IOException {
     String cmd;
     if (getRisers)
       cmd = "python risersFallers.py risers";
@@ -68,7 +84,7 @@ public class DataBridge {
 
     String s = "";
     String csvSplitBy = "@";
-    HashMap<String, String[]> data = new HashMap<String, String[]>();
+    ArrayList<String[]> data = new ArrayList<String[]>();
     String[] arr;
 
     Process p = Runtime.getRuntime().exec(cmd);
@@ -77,9 +93,7 @@ public class DataBridge {
 
 
 		while ((s = stdInput.readLine()) != null) {
-      arr = s.split(csvSplitBy);
-      String[] temp = {arr[0], arr[2], arr[3], arr[4]};
-      data.put(arr[1], temp);
+      data.add(s.split(csvSplitBy));
 		}
 
     return data;
@@ -106,7 +120,14 @@ public class DataBridge {
 
     return data;
   }
-
+  /**
+   *
+   * @param  String      ticker        fetch from companyInfo in datastore
+   * @param  String      interval      'd', 'm', 'q', 'y' (daily, monthly, quarterly, yearly)
+   * @param  String      date          YYYYMMDD
+   * @return             [date, open, high, low, close, volume]
+   * @throws IOException
+   */
   public static String[] getHistoricalData(String ticker, String interval, String date) throws IOException {
     String cmd = "python historicalScrape.py "+ticker+" "+interval+" "+date+" "+date;
     String s = "";
@@ -130,7 +151,12 @@ public class DataBridge {
 
     return data;
 	}
-
+  /**
+   *
+   * @param  String      sectorNum     fetch from sectorNum in DataStore
+   * @return             [ticker, name, currency, price, day change, % day change]
+   * @throws IOException
+   */
   public static ArrayList<String[]> getSectorData(String sectorNum) throws IOException {
 
     String cmd = "python sectorsScraper.py "+sectorNum;
