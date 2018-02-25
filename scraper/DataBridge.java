@@ -11,11 +11,11 @@ public class DataBridge {
       System.out.println(companyData[i]);
     }
 
-    HashMap<String, String[]> risersFallers = getRisersFallers(false);
+    ArrayList<String[]> risersFallers = getRisersFallers(false);
 
-    risersFallers.forEach((k,v) -> System.out.println("key: "+k+" value: "+v[0]+" "+v[1]+" "+v[2]+" "+v[3]));
+    risersFallers.forEach(k -> System.out.println(k[0] +" "+k[1]+" "+k[2]));
 
-    HashMap<String, String> companyTicker = fillCompany();
+    /*HashMap<String, String> companyTicker = fillCompany();
 
     companyTicker.forEach((k,v) -> System.out.println("key: "+k+" value: "+v));
 
@@ -35,7 +35,7 @@ public class DataBridge {
       }
     }
 
-    String[] news = getNews("iii");
+    String[] news = getNews("lse");
     for (int i = 0; i < 3; i++) {
       System.out.println(news[i]);
     }*/
