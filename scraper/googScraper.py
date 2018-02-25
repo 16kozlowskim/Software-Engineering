@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import urllib2, csv, sys
 from bs4 import BeautifulSoup
 
@@ -10,7 +9,6 @@ def get_company_data(ticker):
     soup = BeautifulSoup(page, 'html.parser')
 
     div = soup.find('div', attrs={'id' : 'price-panel'})
-
 
     print div.find('span', attrs={'class' : 'pr'}).text.strip()
 

@@ -1,12 +1,11 @@
 import java.io.*;
 import java.util.*;
 
-
 public class DataBridge {
 
-  /*public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException {
 
-    String[] companyData = DataBridge.getCompanyData("iii");
+    /*String[] companyData = DataBridge.getCompanyData("iii");
 
     for (int i = 0; i < companyData.length; i++) {
       System.out.println(companyData[i]);
@@ -36,8 +35,41 @@ public class DataBridge {
       }
     }
 
+    String[] news = getNews("iii");
+    for (int i = 0; i < 3; i++) {
+      System.out.println(news[i]);
+    }*/
 
-  }*/
+
+  }
+
+  /**
+   * Gets a news article on a company
+   * @param  String ticker
+   * @return        [title, link, summary]
+   */
+  public static String[] getNews(String ticker) {
+    String cmd = "python news.py "+ticker;
+    String s = "";
+    String csvSplitBy = "@";
+    String[] data = new String[3];
+
+    try {
+      Process p = Runtime.getRuntime().exec(cmd);
+
+  		BufferedReader stdInput = new BufferedReader(new
+  		InputStreamReader(p.getInputStream()));
+
+      int i = 0;
+  		while ((s = stdInput.readLine()) != null) {
+        data[i] = s;
+        i++;
+  		}
+    } catch (IOException e) {
+      System.out.print("Help");
+    }
+    return data;
+  }
 
   /**
    * Returns data for a particular company
@@ -68,7 +100,7 @@ public class DataBridge {
         i++;
   		}
     } catch (IOException e) {
-      System.out.print("Help")
+      System.out.print("Help");
     }
     return data;
   }
@@ -100,7 +132,7 @@ public class DataBridge {
         data.add(s.split(csvSplitBy));
   		}
     } catch (IOException e) {
-      System.out.print("Help")
+      System.out.print("Help");
     }
     return data;
   }
@@ -124,7 +156,7 @@ public class DataBridge {
         data.put(arr[1], arr[0]);
   		}
     } catch (IOException e) {
-      System.out.print("Help")
+      System.out.print("Help");
     }
     return data;
   }
@@ -157,7 +189,7 @@ public class DataBridge {
         data = s.split(csvSplitBy);
   		}
     } catch (IOException e) {
-      System.out.print("Help")
+      System.out.print("Help");
     }
     return data;
 	}
@@ -185,7 +217,7 @@ public class DataBridge {
         data.add(s.split(csvSplitBy));
       }
     } catch (IOException e) {
-      System.out.print("Help")
+      System.out.print("Help");
     }
     return data;
   }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # install BeautifulSoup4 before running
 #
 # prints out historical data in csv format:
