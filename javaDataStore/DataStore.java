@@ -18,11 +18,7 @@ public class DataStore {
     // General data
     sectorNum = new HashMap<String, String>();
     companyInfo = DataBridge.fillCompany();
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 6d19aa1f722fb6176247ce1323aee07631e017bc
     sectorNums.put("Aerospace & Defense", "2710");
     sectorNums.put("Alternative Energy", "0580");
     sectorNums.put("Automobiles & Parts", "3350");
@@ -64,7 +60,7 @@ public class DataStore {
     sectorNums.put("Technology Hardware & Equipment", "9570");
     sectorNums.put("Tobacco", "3780");
     sectorNums.put("Travel & Leisure", "5750");
-    
+
   }
 
   static <K,V extends Comparable<? super V>> SortedSet<Map.Entry<K,V>>
