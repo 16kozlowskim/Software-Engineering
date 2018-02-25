@@ -15,11 +15,11 @@ public class DataBridge {
 
     risersFallers.forEach(k -> System.out.println(k[0] +" "+k[1]+" "+k[2]));
 
-    /*HashMap<String, String> companyTicker = fillCompany();
+    HashMap<String, String> companyTicker = fillCompany();
 
     companyTicker.forEach((k,v) -> System.out.println("key: "+k+" value: "+v));
 
-    String[] historical = getHistoricalData("lse.uk", "m", "20161111");
+    String[] historical = getHistoricalData("III.uk", "m", "20180202");
 
 
     for (int j = 0; j < 6; j++) {
@@ -169,7 +169,11 @@ public class DataBridge {
    * @throws IOException
    */
   public static String[] getHistoricalData(String ticker, String interval, String date) {
-    String cmd = "python historicalScrape.py "+ticker+" "+interval+" "+date+" "+date;
+    String symbol = ticker;
+    if (symbol.endsWith(".")) symbol += "uk";
+    else symbol += ".uk";
+
+    String cmd = "python historicalScrape.py "+symbol+" "+interval+" "+date+" "+date;
     String s = "";
     String csvSplitBy = "@";
     String[] data = null;
