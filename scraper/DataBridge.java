@@ -3,7 +3,7 @@ import java.util.*;
 
 public class DataBridge {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
     /*String[] companyData = DataBridge.getCompanyData("iii");
 
@@ -86,7 +86,7 @@ public class DataBridge {
     String cmd = "python googScraper.py "+ticker;
     String s = "";
     String csvSplitBy = "@";
-    String[] data = new String[15];
+    String[] data = new String[14];
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
@@ -95,7 +95,7 @@ public class DataBridge {
   		InputStreamReader(p.getInputStream()));
 
       int i = 0;
-  		while ((s = stdInput.readLine()) != null) {
+  		while (((s = stdInput.readLine()) != null) && (i < 14)) {
         data[i] = s;
         i++;
   		}
