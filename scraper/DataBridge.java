@@ -19,7 +19,7 @@ public class DataBridge {
 
     companyTicker.forEach((k,v) -> System.out.println("key: "+k+" value: "+v));
 
-    String[] historical = getHistoricalData("III.uk", "m", "20180202");
+    String[] historical = getHistoricalData("III", "m", "20180202");
 
 
     for (int j = 0; j < 6; j++) {
