@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 # start_date (YYYYMMDD)
 # end_date (YYYYMMDD)
 def get_historical_data(ticker, interval, start_date, end_date):
-
+    pathToCSV = '../fileStore/file.csv'
     url_builder = []
     url_builder.append('https://stooq.com/q/d/?s=')
     url_builder.append(ticker)
@@ -36,7 +36,13 @@ def get_historical_data(ticker, interval, start_date, end_date):
 
     link = re.search('"(.*)"', str(link))
 
-    link = link.group(1);
+    try:
+        link = link.group(1)
+    except AttributeError:
+        with open(pathToCSV, 'w') as csvfile:
+            wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+            wr.writerow('')
+            exit()
 
     link = link.replace('amp;', '')
 
@@ -51,10 +57,9 @@ def get_historical_data(ticker, interval, start_date, end_date):
     response = urllib2.urlopen(link)
 
     cr = csv.reader(response)
-
-    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
-
-    wr.writerows(cr)
+    with open(pathToCSV, 'w') as csvfile:
+        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+        wr.writerows(cr)
 
 def main():
     args = sys.argv

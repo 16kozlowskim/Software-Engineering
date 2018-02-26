@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 
 def get_ftse_companies():
 
+    pathToCSV = '../fileStore/file.csv'
+
     url = 'http://www.hl.co.uk/shares/stock-market-summary/ftse-100'
 
     data = []
@@ -18,13 +20,13 @@ def get_ftse_companies():
         cols = [ele.text.strip() for index, ele in enumerate(cols) if index < 2]
         data.append([ele for ele in cols if ele])
 
-    #with open('../fileStore/companyTicker.csv', 'w') as csvfile:
-    #    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
-    #    wr.writerows(data)
+    with open(pathToCSV, 'w') as csvfile:
+        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+        wr.writerows(data)
 
-    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
+    #wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
 
-    wr.writerows(data)
+    #wr.writerows(data)
 
 def main():
 

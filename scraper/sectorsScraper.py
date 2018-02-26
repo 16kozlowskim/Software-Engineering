@@ -47,6 +47,7 @@ from bs4 import BeautifulSoup
 # Tobacco - 3780
 # Travel & Leisure - 5750
 def get_sector_data(sector_num):
+    pathToCSV = '../fileStore/file.csv'
     url_builder = []
     url_builder.append('http://www.londonstockexchange.com/exchange/prices-and-markets/stocks/indices/constituents-indices.html?index=UKX&industrySector=')
     url_builder.append(sector_num)
@@ -78,7 +79,10 @@ def get_sector_data(sector_num):
     try:
         table_body = table.find('tbody')
     except AttributeError:
-        return
+        with open(pathToCSV, 'w') as csvfile:
+            wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+            wr.writerow('')
+            exit()
 
     rows = table_body.find_all('tr')
 
@@ -89,9 +93,9 @@ def get_sector_data(sector_num):
         cols = [ele.text.strip() for index, ele in enumerate(cols) if index < 10]
         data.append([ele for ele in cols if ele])
 
-    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
-
-    wr.writerows(data)
+    with open(pathToCSV, 'w') as csvfile:
+        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+        wr.writerows(data)
 
 
 def main():

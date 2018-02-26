@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 
 # type - ('risers' or 'fallers')
 def get_risers_fallers(type):
-
+    pathToCSV = '../fileStore/file.csv'
     url_builder = []
     url_builder.append('http://www.hl.co.uk/shares/stock-market-summary/ftse-100/')
     url_builder.append(type)
@@ -32,10 +32,9 @@ def get_risers_fallers(type):
     #with open(file_path, 'w') as csvfile:
     #    wr = csv.writer(csvfile, delimiter='@', quotechar='#')
     #    wr.writerows(data)
-
-    wr = csv.writer(sys.stdout, delimiter='@', quotechar='#')
-
-    wr.writerows(data)
+    with open(pathToCSV, 'w') as csvfile:
+        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+        wr.writerows(data)
 
 def main():
     args = sys.argv

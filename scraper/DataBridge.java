@@ -3,45 +3,8 @@ import java.util.*;
 
 public class DataBridge {
 
-  public static void main(String[] args) {
+  private static final csvFile = "../fileStore/file.csv";
 
-    /*String[] companyData = DataBridge.getCompanyData("iii");
-
-    for (int i = 0; i < companyData.length; i++) {
-      System.out.println(companyData[i]);
-    }
-
-    ArrayList<String[]> risersFallers = getRisersFallers(false);
-
-    risersFallers.forEach(k -> System.out.println(k[0] +" "+k[1]+" "+k[2]));
-
-    HashMap<String, String> companyTicker = fillCompany();
-
-    companyTicker.forEach((k,v) -> System.out.println("key: "+k+" value: "+v));
-
-    String[] historical = getHistoricalData("III", "m", "20180202");
-
-
-    for (int j = 0; j < 6; j++) {
-      System.out.println(historical[j]);
-    }
-
-    ArrayList<String[]> sector = getSectorData("2720");
-
-    for (int i = 0; i < sector.size(); i++) {
-      System.out.println(sector.size());
-      for (int j = 0; j < sector.get(i).length; j++) {
-        System.out.println(sector.get(i)[j]);
-      }
-    }
-
-    String[] news = getNews("lse");
-    for (int i = 0; i < 3; i++) {
-      System.out.println(news[i]);
-    }*/
-
-
-  }
 
   /**
    * Gets a news article on a company
@@ -57,8 +20,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-  		BufferedReader stdInput = new BufferedReader(new
-  		InputStreamReader(p.getInputStream()));
+  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
       int i = 0;
   		while ((s = stdInput.readLine()) != null) {
@@ -91,8 +53,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-  		BufferedReader stdInput = new BufferedReader(new
-  		InputStreamReader(p.getInputStream()));
+  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
       int i = 0;
   		while (((s = stdInput.readLine()) != null) && (i < 14)) {
@@ -125,7 +86,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-  		BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
 
   		while ((s = stdInput.readLine()) != null) {
@@ -147,8 +108,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-  		BufferedReader stdInput = new BufferedReader(new
-  		InputStreamReader(p.getInputStream()));
+  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
 
   		while ((s = stdInput.readLine()) != null) {
@@ -181,8 +141,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-  		BufferedReader stdInput = new BufferedReader(new
-  		InputStreamReader(p.getInputStream()));
+  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
       int i = 0;
   		while ((s = stdInput.readLine()) != null) {
@@ -213,8 +172,7 @@ public class DataBridge {
     try {
       Process p = Runtime.getRuntime().exec(cmd);
 
-      BufferedReader stdInput = new BufferedReader(new
-      InputStreamReader(p.getInputStream()));
+      BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
 
       while ((s = stdInput.readLine()) != null) {

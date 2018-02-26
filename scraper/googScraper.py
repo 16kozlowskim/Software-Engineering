@@ -5,24 +5,26 @@ from bs4 import BeautifulSoup
 def get_company_data(ticker):
     url = 'https://finance.google.com/finance?q=lon:'
     url += ticker
-
+    pathToCSV = '../fileStore/file.csv'
     page = urllib2.urlopen(url)
     soup = BeautifulSoup(page, 'html.parser')
 
     div = soup.find('div', attrs={'id' : 'price-panel'})
 
-    print div.find('span', attrs={'class' : 'pr'}).text.strip()
+    with open(pathToCSV, 'w') as csvfile:
+        wr = csv.writer(csvfile, delimiter='@', quotechar='#')
+        wr.writerow([div.find('span', attrs={'class' : 'pr'}).text.strip().encode('utf-8')])
+        for e in div.find('div', attrs={'class' : 'id-price-change nwp'}).text.strip().split('\n').encode('utf-8'):
+            wr.writerow([e])
 
-    print div.find('div', attrs={'class' : 'id-price-change nwp'}).text.strip()
+        div = soup.find('div', attrs={'class' : 'snap-panel'})
 
-    div = soup.find('div', attrs={'class' : 'snap-panel'})
+        tables = div.find_all('table')
 
-    tables = div.find_all('table')
-
-    for table in tables:
-        rows = table.find_all('tr')
-        for row in rows:
-            print row.find('td', attrs={'class' : 'val'}).text.strip()
+        for table in tables:
+            rows = table.find_all('tr')
+            for row in rows:
+                wr.writerow([row.find('td', attrs={'class' : 'val'}).text.strip().encode('utf-8')])
 
 
 def main():
