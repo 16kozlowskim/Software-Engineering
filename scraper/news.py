@@ -2,8 +2,8 @@ import feedparser, csv, sys
 from pyteaser import SummarizeUrl
 
 
-def get_rss(ticker):
-    url = 'https://news.google.com/news/rss/search/section/q/lon:'+ticker+'/lon:'+ticker+'?hl=en&gl=GB&ned=us'
+def get_rss(search):
+    url = 'https://news.google.com/news/rss/search/section/q/'+search+'/'+search+'?hl=en&gl=GB&ned=us'
     d = feedparser.parse(url)
     return d
 

@@ -9,11 +9,14 @@ public class DataBridge {
 
   /**
    * Gets a news article on a company
-   * @param  String ticker
+   * @param  String search
    * @return        [title, link, summary]
    */
-  public static String[] getNews(String ticker) {
-    String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py "+ticker;
+  public static String[] getNews(String search, Boolean isCompany) {
+    String query = null;
+    if (isCompany) query = "ftse%20" + search.replaceAll(" ", "%20");
+    else query = "lon:" + search;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py "+query;
     String s = "";
     String csvSplitBy = "@";
     String[] data = new String[3];
