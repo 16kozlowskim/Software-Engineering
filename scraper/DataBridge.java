@@ -19,7 +19,7 @@ public class DataBridge {
     String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py " + query + " " + num;
     String s = "";
     String csvSplitBy = "@";
-    String[] data = new String[num];
+    String[] data = new String[num*3];
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
