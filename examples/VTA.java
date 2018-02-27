@@ -19,6 +19,7 @@ package ai.api.examples;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.DataOutputStream;
 
 import ai.api.AIConfiguration;
 import ai.api.AIDataService;
@@ -32,6 +33,9 @@ import java.util.Map.Entry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
+
 import javax.xml.crypto.Data;
 
 /**
@@ -41,6 +45,8 @@ public class VTA {
 
 	private static final String INPUT_PROMPT = "> ";
 	private static int newsPreference;
+	private static final String USER_AGENT = "Mozilla/5.0";
+
 
 	/**
 	 * @param args List of parameters:<br>
@@ -57,6 +63,11 @@ public class VTA {
 		String line;
 		newsPreference = 3;
 
+		try {
+			resetCompanies();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		//Set up database
 		try {
 			DataStore.initDB();
@@ -409,4 +420,44 @@ public class VTA {
 		}
 		return false;
 	}
+
+	public static void resetCompanies() throws Exception {
+		String url = "https://api.dialogflow.com/v1/entities/1e959c5e-8845-4998-a03f-415d0166b0b1/entries?v=20150910";
+		URL obj = new URL(url);
+		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+		con.setRequestMethod("DELETE");
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		con.setRequestProperty("Authorization","Bearer b611bac8ca534ecd93e2a45e82da0f62");
+		con.setRequestProperty("Content-Type","application/json");
+
+		String body = "\"volume\"";
+
+		con.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(body);
+		wr.flush();
+		wr.close();
+
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + body);
+		System.out.println("Response Code : " + responseCode);
+
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		//print result
+		System.out.println(response.toString());
+
+
+	}
+
 }
