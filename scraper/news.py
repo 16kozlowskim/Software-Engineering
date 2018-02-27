@@ -21,9 +21,13 @@ def get_data(rss, num):
             wr.writerow([(e['link']).encode('utf-8')])
 
             summary = []
-            for elem in SummarizeUrl(e['link'].encode('utf-8')):
-                summary.append(elem)
-            wr.writerow([' '.join(summary).encode('utf-8').strip().replace('\n', '')])
+            try:
+                for elem in SummarizeUrl(e['link'].encode('utf-8')):
+                    summary.append(elem)
+                wr.writerow([' '.join(summary).encode('utf-8').strip().replace('\n', '')])
+            except TypeError:
+                wr.writerow(['Summary Unavailable'])
+
             index = index + 1
 
 
