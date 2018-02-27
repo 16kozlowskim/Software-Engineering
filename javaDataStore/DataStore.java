@@ -77,12 +77,84 @@ public class DataStore {
 		conn.close();
 	}
 
+  public static ArrayList<String> getFavouriteCompanies(int num) throws SQLException {
+    Connection conn = getConnection();
+    Statement s = conn.createStatement();
+    ArrayList<String> favourites = new ArrayList<String>();
+
+    String query = "select name from company order by count desc limit " + num;
+    ResultSet rs = s.executeQuery(query);
+
+    while (rs.next()) {
+      favourites.add(rs.getString(1));
+    }
+    conn.close();
+
+    return favourites;
+  }
+
+  public static ArrayList<String> getFavouriteSectors(int num) {
+    Connection conn = getConnection();
+    Statement s = conn.createStatement();
+    ArrayList<String> favourites = new ArrayList<String>();
+
+    String query = "select name from sector order by count desc limit " + num;
+    ResultSet rs = s.executeQuery(query);
+
+    while (rs.next()) {
+      favourites.add(rs.getString(1));
+    }
+    conn.close();
+
+    return favourites;
+  }
+
+  public static ArrayList<String> getFavouriteAttributes(int num) {
+    Connection conn = getConnection();
+    Statement s = conn.createStatement();
+    ArrayList<String> favourites = new ArrayList<String>();
+
+    String query = "select name from attribute order by count desc limit " + num;
+    ResultSet rs = s.executeQuery(query);
+
+    while (rs.next()) {
+      favourites.add(rs.getString(1));
+    }
+    conn.close();
+
+    return favourites;
+  }
+
 	public static void incrementCompany(String name){
 		try {
 			Connection conn = getConnection();
 			Statement s = null;
 			s = conn.createStatement();
 			s.executeUpdate("update company set count = count + 1 where name = "+name);
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+  public static void incrementSector(String name){
+		try {
+			Connection conn = getConnection();
+			Statement s = null;
+			s = conn.createStatement();
+			s.executeUpdate("update sector set count = count + 1 where name = "+name);
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+  public static void incrementAttribute(String name){
+		try {
+			Connection conn = getConnection();
+			Statement s = null;
+			s = conn.createStatement();
+			s.executeUpdate("update attribute set count = count + 1 where name = "+name);
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -114,6 +186,29 @@ public class DataStore {
 				e.printStackTrace();
 			}
 		});
+    try {
+      s.executeUpdate("insert into attribute values('volume', 0)");
+      s.executeUpdate("insert into attribute values('price', 0)");
+      s.executeUpdate("insert into attribute values('open', 0)");
+      s.executeUpdate("insert into attribute values('close', 0)");
+      s.executeUpdate("insert into attribute values('day high', 0)");
+      s.executeUpdate("insert into attribute values('day low', 0)");
+      s.executeUpdate("insert into attribute values('absolute change', 0)");
+      s.executeUpdate("insert into attribute values('percentage change', 0)");
+      s.executeUpdate("insert into attribute values('day low-high', 0)");
+      s.executeUpdate("insert into attribute values('52 week low-high', 0)");
+      s.executeUpdate("insert into attribute values('market cap', 0)");
+      s.executeUpdate("insert into attribute values('PE ratio', 0)");
+      s.executeUpdate("insert into attribute values('dividend yield', 0)");
+      s.executeUpdate("insert into attribute values('earnings per share', 0)");
+      s.executeUpdate("insert into attribute values('shares outstanding', 0)");
+      s.executeUpdate("insert into attribute values('beta', 0)");
+      s.executeUpdate("insert into attribute values('institutional ownership', 0)");
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    conn.close();
 	}
 
 	public static Connection getConnection() {
