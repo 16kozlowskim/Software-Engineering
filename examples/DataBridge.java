@@ -175,6 +175,7 @@ public class DataBridge {
 		else symbol += ".uk";
 
 		String cmd = "python ./src/main/java/ai/api/examples/scraper/historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
+		System.out.println(cmd);
 		String s = "";
 		String csvSplitBy = "@";
 		String[] data = new String[6];

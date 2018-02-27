@@ -250,13 +250,13 @@ public class VTA {
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("CompanyName"))
-				ticker = parameter.getValue().toString();
+				ticker = parameter.getValue().getAsString();
 				if(ticker.equals("")) break;
 			if (parameter.getKey().equals("Attributes")) {
 				attributes = parameter.getValue().getAsJsonArray();
 				for (int i = 0; i < attributes.size(); i++) {
 					try {
-						data[i] = DataBridge.getCompanyData(ticker)[getIndexOfAttribute2(attributes.get(i).toString())];
+						data[i] = DataBridge.getCompanyData(ticker)[getIndexOfAttribute2(attributes.get(i).getAsString())];
 					} catch (IndexOutOfBoundsException e) {
 						System.out.print("Sorry, I couldn't find that for you");
 					}
@@ -280,15 +280,15 @@ public class VTA {
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("CompanyName"))
-				ticker = parameter.getValue().toString();
+				ticker = parameter.getValue().getAsString();
 			if (parameter.getKey().equals("date")) {
-				date = parameter.getValue().toString().replace("-", "");
+				date = parameter.getValue().getAsString().replace("-", "");
 			}
 			if (parameter.getKey().equals("Attributes")) {
 				attributes = parameter.getValue().getAsJsonArray();
 				for (int i = 0; i < attributes.size(); i++) {
 					try {
-						data[i] = DataBridge.getHistoricalData(ticker, "d", date)[getIndexOfAttribute(attributes.get(i).toString())];
+						data[i] = DataBridge.getHistoricalData(ticker, "d", date)[getIndexOfAttribute(attributes.get(i).getAsString())];
 					} catch (IndexOutOfBoundsException e) {
 						data[i] = "Sorry, I couldn't find that for you";
 					}
@@ -312,7 +312,7 @@ public class VTA {
 		JsonArray attributes = null;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("Sectors")){
-				ticker = parameter.getValue().toString();
+				ticker = parameter.getValue().getAsString();
 				sectorNum = DataStore.getSectorNum(ticker.replace("\"",""));
 				data = DataBridge.getSectorData(sectorNum);
 				DataStore.incrementSector(ticker);
@@ -322,7 +322,7 @@ public class VTA {
 			}
 		}
 		for (int j = 0; j < attributes.size(); j++) {
-			DataStore.incrementAttribute(attributes.get(j).toString());
+			DataStore.incrementAttribute(attributes.get(j).getAsString());
 		}
 		for (int i = 0; i < data.size(); i++) {
 			if (data.get(i) != null) {
@@ -378,13 +378,13 @@ public class VTA {
 		boolean company = false;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
-				ticker = parameter.getValue().toString();
+				ticker = parameter.getValue().getAsString();
 				company = true;
 				DataStore.incrementCompany(ticker);
 			}
 			else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")){
 				company = false;
-				ticker = parameter.getValue().toString();
+				ticker = parameter.getValue().getAsString();
 				DataStore.incrementSector(ticker);
 			}
 		}

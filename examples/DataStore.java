@@ -138,7 +138,7 @@ public class DataStore {
 			Connection conn = getConnection();
 			Statement s = null;
 			s = conn.createStatement();
-			s.executeUpdate("update company set count = count + 1 where name = "+name);
+			s.executeUpdate("update company set count = count + 1 where name = '"+name+"'");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,7 +150,7 @@ public class DataStore {
 			Connection conn = getConnection();
 			Statement s = null;
 			s = conn.createStatement();
-			s.executeUpdate("update sector set count = count + 1 where name = "+name);
+			s.executeUpdate("update sector set count = count + 1 where name = '"+name+"'");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -162,7 +162,7 @@ public class DataStore {
 			Connection conn = getConnection();
 			Statement s = null;
 			s = conn.createStatement();
-			s.executeUpdate("update attribute set count = count + 1 where name = "+name);
+			s.executeUpdate("update attribute set count = count + 1 where name = '"+name+"'");
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
