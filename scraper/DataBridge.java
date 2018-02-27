@@ -1,9 +1,10 @@
+package ai.api.examples;
 import java.io.*;
 import java.util.*;
 
 public class DataBridge {
 
-  private static final csvFile = "../fileStore/file.csv";
+  private static final String csvFile = "./src/main/java/ai/api/examples/fileStore/file.csv";
 
 
   /**
@@ -12,15 +13,19 @@ public class DataBridge {
    * @return        [title, link, summary]
    */
   public static String[] getNews(String ticker) {
-    String cmd = "python news.py "+ticker;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py "+ticker;
     String s = "";
     String csvSplitBy = "@";
     String[] data = new String[3];
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
-
-  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
+      BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
       int i = 0;
   		while ((s = stdInput.readLine()) != null) {
@@ -28,7 +33,7 @@ public class DataBridge {
         i++;
   		}
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
   }
@@ -45,15 +50,20 @@ public class DataBridge {
    * @throws IOException
    */
   public static String[] getCompanyData(String ticker) {
-    String cmd = "python googScraper.py "+ticker;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/googScraper.py "+ticker;
     String s = "";
     String csvSplitBy = "@";
     String[] data = new String[14];
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
 
-  		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
+      BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
       int i = 0;
   		while (((s = stdInput.readLine()) != null) && (i < 14)) {
@@ -61,7 +71,7 @@ public class DataBridge {
         i++;
   		}
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
   }
@@ -74,9 +84,9 @@ public class DataBridge {
   public static ArrayList<String[]> getRisersFallers(Boolean getRisers) {
     String cmd;
     if (getRisers)
-      cmd = "python risersFallers.py risers";
+      cmd = "python ./src/main/java/ai/api/examples/scraper/risersFallers.py risers";
     else
-      cmd = "python risersFallers.py fallers";
+      cmd = "python ./src/main/java/ai/api/examples/scraper/risersFallers.py fallers";
 
     String s = "";
     String csvSplitBy = "@";
@@ -85,6 +95,11 @@ public class DataBridge {
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
 
   		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
@@ -93,13 +108,13 @@ public class DataBridge {
         data.add(s.split(csvSplitBy));
   		}
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
   }
 
   public static HashMap<String, String> fillCompany() {
-    String cmd = "python ftseTickerCompanies.py";
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/ftseTickerCompanies.py";
     String s = "";
     String csvSplitBy = "@";
     HashMap<String, String> data = new HashMap<String, String>();
@@ -107,16 +122,20 @@ public class DataBridge {
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
-
+        try {
+          p.waitFor();
+        } catch (InterruptedException e) {
+          System.out.println(e.getMessage());
+        }
   		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
 
   		while ((s = stdInput.readLine()) != null) {
-        arr = s.split(csvSplitBy);
-        data.put(arr[1], arr[0]);
+          arr = s.split(csvSplitBy);
+          data.put(arr[1], arr[0]);
   		}
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
   }
@@ -133,13 +152,18 @@ public class DataBridge {
     if (symbol.endsWith(".")) symbol += "uk";
     else symbol += ".uk";
 
-    String cmd = "python historicalScrape.py "+symbol+" "+interval+" "+date+" "+date;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/historicalScrape.py "+symbol+" "+interval+" "+date+" "+date;
     String s = "";
     String csvSplitBy = "@";
     String[] data = null;
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
 
   		BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
@@ -152,7 +176,7 @@ public class DataBridge {
         data = s.split(csvSplitBy);
   		}
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
 	}
@@ -164,13 +188,18 @@ public class DataBridge {
    */
   public static ArrayList<String[]> getSectorData(String sectorNum) {
 
-    String cmd = "python sectorsScraper.py "+sectorNum;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/sectorsScraper.py "+sectorNum;
     String s = "";
     String csvSplitBy = "@";
     ArrayList<String[]> data = new ArrayList<String[]>();
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
+      try {
+        p.waitFor();
+      } catch (InterruptedException e) {
+        System.out.println(e.getMessage());
+      }
 
       BufferedReader stdInput = new BufferedReader(new FileReader(csvFile));
 
@@ -179,7 +208,7 @@ public class DataBridge {
         data.add(s.split(csvSplitBy));
       }
     } catch (IOException e) {
-      System.out.print("Help");
+      System.out.print(e.getMessage());
     }
     return data;
   }
