@@ -12,14 +12,14 @@ public class DataBridge {
    * @param  String search
    * @return        [title, link, summary]
    */
-  public static String[] getNews(String search, Boolean isCompany) {
+  public static String[] getNews(String search, Boolean isCompany, int num) {
     String query = null;
     if (isCompany) query = "ftse%20" + search.replaceAll(" ", "%20");
     else query = "lon:" + search;
-    String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py "+query;
+    String cmd = "python ./src/main/java/ai/api/examples/scraper/news.py " + query + " " + num;
     String s = "";
     String csvSplitBy = "@";
-    String[] data = new String[3];
+    String[] data = new String[num];
 
     try {
       Process p = Runtime.getRuntime().exec(cmd);
