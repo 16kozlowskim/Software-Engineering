@@ -430,41 +430,16 @@ public class VTA {
 	}
 
 	public static void deleteCompanies() throws Exception {
-		String url = "https://api.dialogflow.com/v1/entities?v=20150910";
+		String url = "https://api.dialogflow.com/v1/entities/7567f203-7272-4c87-82a3-0e0aa6e0d7f2?v=20150910";
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-		con.setRequestMethod("POST");
+		con.setRequestMethod("DELETE");
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Authorization","Bearer 3e87883ff05f4b06abe0a57ada75c486");
 		con.setRequestProperty("Content-Type","application/json");
 
-		DataStore.
-		String body = "[\"volume\"]";
-
 		con.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(body);
-		wr.flush();
-		wr.close();
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + body);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-
-		//print result
-		System.out.println(response.toString());
 
 	}
 
@@ -473,7 +448,7 @@ public class VTA {
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
-		con.setRequestMethod("DELETE");
+		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Authorization","Bearer 3e87883ff05f4b06abe0a57ada75c486");
 		con.setRequestProperty("Content-Type","application/json");
@@ -504,27 +479,6 @@ public class VTA {
 		wr.writeBytes(body);
 		wr.flush();
 		wr.close();
-
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + body);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-
-		//print result
-		System.out.println(response.toString());
-
 	}
-
-
 
 }
