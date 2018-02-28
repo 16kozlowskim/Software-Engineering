@@ -63,6 +63,7 @@ public class VTA {
 
 		AIConfiguration configuration = new AIConfiguration(args[0]);
 		AIDataService dataService = new AIDataService(configuration);
+
 		String line;
 		newsPreference = 3;
 
@@ -71,6 +72,7 @@ public class VTA {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+
 		//Set up database
 		try {
 			DataStore.initDB();
@@ -453,6 +455,25 @@ public class VTA {
 		wr.writeBytes(body);
 		wr.flush();
 		wr.close();
+
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + body);
+		System.out.println("Response Code : " + responseCode);
+
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		//print result
+		System.out.println(response.toString());
+
 	}
 
 	public static void fillCompanies() throws Exception {
@@ -471,7 +492,7 @@ public class VTA {
 		StringJoiner joiner = new StringJoiner(", ");
 
 		companies.forEach((k, v) -> {
-			joiner.add("{\"synonyms\": [\""+ k +"\"], \"value\": \""+ v +"\"}");
+			joiner.add("{\"synonyms\": [\""+ k.replaceAll("\\(", "").replaceAll("\\)", "") +"\"], \"value\": \""+ v +"\"}");
 		});
 
 		String body = "[" + joiner.toString() + "]";
@@ -481,6 +502,25 @@ public class VTA {
 		wr.writeBytes(body);
 		wr.flush();
 		wr.close();
+
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Post parameters : " + body);
+		System.out.println("Response Code : " + responseCode);
+
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		//print result
+		System.out.println(response.toString());
+
 	}
 
 }
