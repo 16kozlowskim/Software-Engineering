@@ -16,7 +16,9 @@
 
 package ai.api.examples;
 
+import java.sql.Array;
 import java.util.StringJoiner;
+import java.util.Random;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -426,6 +428,80 @@ public class VTA {
 		return false;
 	}
 
+	/**
+	 * Returns the favourites in risers and fallers as two arraylists in an array:
+	 * [riserCompany1, riserCompany2, ...]
+	 * [fallerCompany1, fallerCompany2, ...]
+	 *
+	 * @return
+	 */
+	public static ArrayList<String>[] favouritesInRisersFallers() {
+		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
+		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
+
+		ArrayList<String> favourites = DataStore.getFavouriteCompanies(5);
+		ArrayList<String> favouritesInRisers = new ArrayList<>();
+		ArrayList<String> favouritesInFallers = new ArrayList<>();
+
+		for (int i = 0; i < favourites.size(); i++) {
+			for (int j = 0; j < risers.size(); j++) {
+				if (favourites.get(i).equals(risers.get(j)[0]));
+					favouritesInRisers.add(favourites.get(i));
+			}
+		}
+
+		for (int i = 0; i < favourites.size(); i++) {
+			for (int j = 0; j < fallers.size(); j++) {
+				if (favourites.get(i).equals(fallers.get(j)[0]));
+				favouritesInFallers.add(favourites.get(i));
+			}
+		}
+
+		ArrayList<String>[] arr = new ArrayList<String>[2];
+		arr[0] = favouritesInRisers;
+		arr[1] = favouritesInFallers;
+
+		return arr;
+	}
+
+	/**
+	 * Used to create AI notifications about favourite company or sector with a favourite attribute.
+	 * Favourite attributes won't be used in case the query is about a sector, rather all the data will be displayed.
+	 * Returns an array of size 2 and in the case the first entry is a company, the second entry will be an attribute,
+	 * and if the first entry is a sector, the second entry will be null, like so;
+	 * [companyName, attributeName] or [sectorName, null]
+	 * @return
+	 */
+	public static String[] notificationData() {
+		ArrayList<String> favourites = null;
+		String company = null;
+		String sector = null;
+		String[] notification = new String[2];
+
+		Random rng = new Random();
+
+		if (rng.nextInt(10) < 7) {
+			favourites = DataStore.getFavouriteCompanies(5);
+			company = favourites.get(rng.nextInt(5));
+			ArrayList<String> favouriteAttributes = DataStore.getFavouriteAttributes(5);
+			String attribute = favouriteAttributes.get(rng.nextInt(5));
+
+			notification[0] = company;
+			notification[1] = attribute;
+
+		}
+		else {
+			favourites = DataStore.getFavouriteSectors(5);
+			sector = favourites.get(rng.nextInt(5));
+			notification[0] = sector;
+			notification[1] = null;
+		}
+
+		return notification;
+
+
+	}
+
 	public static void resetCompanies() throws Exception {
 		deleteCompanies();
 		fillCompanies();
@@ -456,24 +532,6 @@ public class VTA {
 		wr.flush();
 		wr.close();
 
-		/*int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + body);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-
-		//print result
-		System.out.println(response.toString());*/
-
 	}
 
 	public static void fillCompanies() throws Exception {
@@ -502,24 +560,6 @@ public class VTA {
 		wr.writeBytes(body);
 		wr.flush();
 		wr.close();
-
-		/*int responseCode = con.getResponseCode();
-		System.out.println("\nSending 'POST' request to URL : " + url);
-		System.out.println("Post parameters : " + body);
-		System.out.println("Response Code : " + responseCode);
-
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-		}
-		in.close();
-
-		//print result
-		System.out.println(response.toString());*/
 
 	}
 

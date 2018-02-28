@@ -81,18 +81,23 @@ public class DataStore {
 		conn.close();
 	}
 
-	public static ArrayList<String> getFavouriteCompanies(int num) throws SQLException {
+	public static ArrayList<String> getFavouriteCompanies(int num) {
 		Connection conn = getConnection();
-		Statement s = conn.createStatement();
+		Statement s = null;
 		ArrayList<String> favourites = new ArrayList<String>();
 
-		String query = "select name from company order by count desc limit " + num;
-		ResultSet rs = s.executeQuery(query);
+		try {
+			s = conn.createStatement();
+			String query = "select name from company order by count desc limit " + num;
+			ResultSet rs = s.executeQuery(query);
 
-		while (rs.next()) {
-			favourites.add(rs.getString(1));
+			while (rs.next()) {
+				favourites.add(rs.getString(1));
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		conn.close();
 
 		return favourites;
 	}
