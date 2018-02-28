@@ -456,7 +456,7 @@ public class VTA {
 		wr.flush();
 		wr.close();
 
-		int responseCode = con.getResponseCode();
+		/*int responseCode = con.getResponseCode();
 		System.out.println("\nSending 'POST' request to URL : " + url);
 		System.out.println("Post parameters : " + body);
 		System.out.println("Response Code : " + responseCode);
@@ -472,7 +472,7 @@ public class VTA {
 		in.close();
 
 		//print result
-		System.out.println(response.toString());
+		System.out.println(response.toString());*/
 
 	}
 
@@ -492,7 +492,7 @@ public class VTA {
 		StringJoiner joiner = new StringJoiner(", ");
 
 		companies.forEach((k, v) -> {
-			joiner.add("{\"synonyms\": [\""+ k.replaceAll("\\(", "").replaceAll("\\)", "") +"\"], \"value\": \""+ v +"\"}");
+			joiner.add("{\"synonyms\": [\""+ k.replaceAll("\\(", "").replaceAll("\\)", "") + "\", \"" + v + "\"], \"value\": \""+ v +"\"}");
 		});
 
 		String body = "[" + joiner.toString() + "]";
@@ -503,7 +503,7 @@ public class VTA {
 		wr.flush();
 		wr.close();
 
-		int responseCode = con.getResponseCode();
+		/*int responseCode = con.getResponseCode();
 		System.out.println("\nSending 'POST' request to URL : " + url);
 		System.out.println("Post parameters : " + body);
 		System.out.println("Response Code : " + responseCode);
@@ -519,7 +519,7 @@ public class VTA {
 		in.close();
 
 		//print result
-		System.out.println(response.toString());
+		System.out.println(response.toString());*/
 
 	}
 
