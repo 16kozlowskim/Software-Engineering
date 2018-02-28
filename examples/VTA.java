@@ -435,7 +435,7 @@ public class VTA {
 	 *
 	 * @return
 	 */
-	public static ArrayList<String>[] favouritesInRisersFallers() {
+	public static ArrayList<ArrayList<String>> favouritesInRisersFallers() {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
@@ -457,9 +457,9 @@ public class VTA {
 			}
 		}
 
-		ArrayList<String>[] arr = new ArrayList<String>[2];
-		arr[0] = favouritesInRisers;
-		arr[1] = favouritesInFallers;
+		ArrayList<ArrayList<String>> arr = new ArrayList<ArrayList<String>>();
+		arr.add(favouritesInRisers);
+		arr.add(favouritesInFallers);
 
 		return arr;
 	}
