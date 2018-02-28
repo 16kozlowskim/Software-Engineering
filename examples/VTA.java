@@ -441,10 +441,28 @@ public class VTA {
 
 		con.setDoOutput(true);
 
+
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'POST' request to URL : " + url);
+		System.out.println("Response Code : " + responseCode);
+
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		//print result
+		System.out.println(response.toString());
+
 	}
 
 	public static void fillCompanies() throws Exception {
-		String url = "https://api.dialogflow.com/v1/entities/7567f203-7272-4c87-82a3-0e0aa6e0d7f2?v=20150910";
+		String url = "https://api.dialogflow.com/v1/entities?v=20150910";
 		URL obj = new URL(url);
 		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
@@ -455,16 +473,12 @@ public class VTA {
 
 		HashMap<String, String> companies = DataStore.getCompanyInfo();
 
-		String beg = "{\"entries\": ["
+		String beg = "{\"entries\": [";
 
 		StringJoiner joiner = new StringJoiner(", ");
 
 		companies.forEach((k, v) -> {
-			try {
-				joiner.add("{\"synonyms\": [\""+ k +"\"], \"value\": \""+ v +"\"}");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			joiner.add("{\"synonyms\": [\""+ k +"\"], \"value\": \""+ v +"\"}");
 		});
 
 		String listString = joiner.toString();
