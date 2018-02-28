@@ -9,8 +9,12 @@ import java.sql.Statement;
 
 public class DataStore {
 
-	private static final Map<String, String> companyInfo = DataBridge.fillCompany();
-	private static final Map<String, String> sectorNumbers = getSectorNumbers();
+	private static final HashMap<String, String> companyInfo = DataBridge.fillCompany();
+	private static final HashMap<String, String> sectorNumbers = getSectorNumbers();
+
+	public static HashMap<String, String> getCompanyInfo() {
+		return companyInfo;
+	}
 
 	public static String getSectorNum(String name) {
 		return sectorNumbers.get(name);
