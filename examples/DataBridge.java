@@ -72,7 +72,6 @@ public class DataBridge {
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
 			try {
-				System.out.println("Alive:"+p.isAlive());
 				BufferedReader bs = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 				while((s=bs.readLine()) != null){
 					System.out.println(s);
@@ -186,7 +185,6 @@ public class DataBridge {
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
 		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
-		System.out.println(cmd);
 		String s = "";
 		String csvSplitBy = "@";
 		String[] data = new String[6];
