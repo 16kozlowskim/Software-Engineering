@@ -209,9 +209,11 @@ public class VTA {
 		String data[] = new String[2];
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName"))
+			if (parameter.getKey().equals("CompanyName")){
 				ticker = parameter.getValue().getAsString();
-				if(ticker.equals("")) break;
+				DataStore.incrementCompany(ticker);
+			}
+			if(ticker.equals("")) break;
 			if (parameter.getKey().equals("Attributes")) {
 				attributes = parameter.getValue().getAsJsonArray();
 				for (int i = 0; i < attributes.size(); i++) {
@@ -221,7 +223,26 @@ public class VTA {
 						System.out.print("Sorry, I couldn't find that for you");
 					}
 				}
-				DataStore.incrementCompany(ticker);
+				if(attributes.size()==0){
+					String outputData = ticker+" top stats:<br />";
+					ArrayList<String> favouriteAttributes = DataStore.getFavouriteAttributes(5);
+					String[] companyData = DataBridge.getCompanyData(ticker);
+					for(int i = 0; i < favouriteAttributes.size(); i++){
+						try{
+							outputData += favouriteAttributes.get(i)+": "+companyData[getIndexOfAttribute2(favouriteAttributes.get(i))]+"<br />";
+						}catch(IndexOutOfBoundsException e){
+
+						}
+					}
+					companyData = DataBridge.getNews(ticker,true,1);
+					outputData += "<p>News on "+ticker+": <br />";
+					for (int i = 0; i < companyData.length; i++) {
+						if((i+1) % 3 == 0 && companyData[i] != null){
+							outputData += "<a href=\""+companyData[i-1]+"\">"+companyData[i-2]+"</a><br />"+companyData[i]+"<br />";
+						}
+					}
+					return outputData;
+				}
 			}
 		}
 		String outputData = response.getResult().getFulfillment().getSpeech()+": " +"<br />";
@@ -246,6 +267,7 @@ public class VTA {
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("CompanyName"))
 				ticker = parameter.getValue().getAsString();
+				DataStore.incrementCompany(ticker);
 			if (parameter.getKey().equals("date")) {
 				date = parameter.getValue().getAsString().replace("-", "");
 			}
@@ -258,7 +280,12 @@ public class VTA {
 						data[i] = "Sorry, I couldn't find that for you";
 					}
 				}
-				DataStore.incrementCompany(ticker);
+				if(attributes.size()==0){
+					String[] companyData = DataBridge.getHistoricalData(ticker,"d",date);
+					String outputData = ticker+" top stats from "+companyData[0]+":<br />";
+					outputData += "Open: "+companyData[1]+"<br />High: "+companyData[2]+"<br />Low:"+companyData[3]+"<br />Close:"+companyData[4]+"<br />Volume:"+companyData[5];
+					return outputData;
+				}
 			}
 		}
 		String outputData = response.getResult().getFulfillment().getSpeech()+": "+"<br />";
@@ -293,6 +320,18 @@ public class VTA {
 		}
 		for (int j = 0; j < attributes.size(); j++) {
 			DataStore.incrementAttribute(attributes.get(j).getAsString());
+		}
+		if(attributes.size()==0){
+			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(ticker));
+			String outputData = ticker+": <br />";
+			for (int i = 0; i < sectorData.size(); i++) {
+				if (sectorData.get(i) != null) {
+					outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
+					outputData += "Price: "+sectorData.get(i)[getIndexOfAttribute3("price")]+" Absolute Change:"+sectorData.get(i)[getIndexOfAttribute3("absolute change")]+" Percentage Change: "+sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+				}
+				outputData += "<br />";
+			}
+			return outputData;
 		}
 		String outputData = response.getResult().getFulfillment().getSpeech()+": "+"<br />";
 		for (int i = 0; i < data.size(); i++) {
@@ -610,7 +649,7 @@ public class VTA {
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("") || parameter.getKey().equals("CompanyNameContext") && !parameter.getValue().equals("")) {
 						DataStore.incrementCompany(parameter.getValue().getAsString());
 						data = DataBridge.getCompanyData(parameter.getValue().getAsString())[getIndexOfAttribute2("percentage change")];
 						if(data.charAt(0)=='+'){
@@ -631,11 +670,8 @@ public class VTA {
 						// The bank sector is positive/negative/mixed
 						return outputData;
 					}
-					else {
-						return "Sorry, I didn't catch that";
-					}
 				}
-
+				return "Sorry, I didn't catch that";
 			}
 			return response.getResult().getFulfillment().getSpeech();
 		} else {
