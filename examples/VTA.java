@@ -611,12 +611,14 @@ public class VTA {
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+						DataStore.incrementCompany(parameter.getValue().getAsString());
 						data = DataBridge.getCompanyData(parameter.getValue().getAsString())[getIndexOfAttribute2("percentage change")];
 						if(data.charAt(0)=='+'){
 							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
 						}
 						else return parameter.getValue()+"is not doing well falling at "+data.substring(1);
 					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
+						DataStore.incrementSector(parameter.getValue().getAsString());
 						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
 						String outputData = parameter.getValue().getAsString()+": <br />";
 						for (int i = 0; i < sectorData.size(); i++) {
