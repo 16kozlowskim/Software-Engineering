@@ -305,7 +305,9 @@ public class VTA {
 						System.out.print(data.get(i)[getIndexOfAttribute3(attributes.get(j).getAsString())]+" ");
 					} catch (IndexOutOfBoundsException e) {
 						System.out.print("Sorry, I couldn't find that for you");
+
 						outputData = "Sorry, I couldn't find that for you";
+
 					}
 				}
 			}
@@ -443,6 +445,7 @@ public class VTA {
 	 * [companyName, attributeName] or [sectorName, null]
 	 * @return
 	 */
+
 	public static String notificationData() {
 		ArrayList<String> favourites = null;
 		String company = null;
@@ -474,6 +477,7 @@ public class VTA {
 			}
 			return outputData;
 		}
+
 	}
 
 	public static void resetCompanies() throws Exception {
@@ -634,6 +638,7 @@ public class VTA {
 					}
 				}
 
+
 			}
 			return response.getResult().getFulfillment().getSpeech();
 		} else {
@@ -641,4 +646,5 @@ public class VTA {
 		}
 		return "";
 	}
+
 }
