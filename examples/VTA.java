@@ -659,16 +659,24 @@ public class VTA {
 					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
 						DataStore.incrementSector(parameter.getValue().getAsString());
 						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
-						String outputData = parameter.getValue().getAsString()+": <br />";
+						String outputData = "";
+						boolean positive = false;
+						boolean negative = false;
 						for (int i = 0; i < sectorData.size(); i++) {
 							if (sectorData.get(i) != null) {
+								if(sectorData.get(i)[getIndexOfAttribute3("percentage change")].charAt(0)=='+'){
+									positive = true;
+								}
+								else negative = true;
 								outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
 								outputData += sectorData.get(i)[getIndexOfAttribute3("percentage change")];
 							}
 							outputData += "<br />";
 						}
 						// The bank sector is positive/negative/mixed
-						return outputData;
+						if(positive && negative) return "The "+parameter.getValue().getAsString()+" sector is mixed: <br />"+outputData;
+						else if(positive) return "The "+parameter.getValue().getAsString()+" sector is doing well: <br />"+outputData;
+						return "The "+parameter.getValue().getAsString()+" sector isn't doing well: <br />"+outputData;
 					}
 				}
 				return "Sorry, I didn't catch that";
