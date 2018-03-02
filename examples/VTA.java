@@ -305,6 +305,9 @@ public class VTA {
 						System.out.print(data.get(i)[getIndexOfAttribute3(attributes.get(j).getAsString())]+" ");
 					} catch (IndexOutOfBoundsException e) {
 						System.out.print("Sorry, I couldn't find that for you");
+
+						outputData = "Sorry, I couldn't find that for you";
+
 					}
 				}
 			}
@@ -442,33 +445,38 @@ public class VTA {
 	 * [companyName, attributeName] or [sectorName, null]
 	 * @return
 	 */
-	public static String[] notificationData() {
+
+	public static String notificationData() {
 		ArrayList<String> favourites = null;
 		String company = null;
 		String sector = null;
-		String[] notification = new String[2];
 
 		Random rng = new Random();
-
+		favourites = DataStore.getFavouriteCompanies(5);
+		company = favourites.get(rng.nextInt(5));
+		favourites = DataStore.getFavouriteSectors(5);
+		sector = favourites.get(rng.nextInt(5));
 		if (rng.nextInt(10) < 7) {
-			favourites = DataStore.getFavouriteCompanies(5);
-			company = favourites.get(rng.nextInt(5));
 			ArrayList<String> favouriteAttributes = DataStore.getFavouriteAttributes(5);
 			String attribute = favouriteAttributes.get(rng.nextInt(5));
 
-			notification[0] = company;
-			notification[1] = attribute;
-
+			String[] data = DataBridge.getCompanyData(company);
+			System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)]);
+			return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)];
 		}
 		else {
-			favourites = DataStore.getFavouriteSectors(5);
-			sector = favourites.get(rng.nextInt(5));
-			notification[0] = sector;
-			notification[1] = null;
+			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sector));
+			String outputData = sector+": <br />";
+			for (int i = 0; i < sectorData.size(); i++) {
+				if (sectorData.get(i) != null) {
+					outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
+					System.out.print(sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): ");
+					outputData += sectorData.get(i)[getIndexOfAttribute3("price")]+" "+sectorData.get(i)[getIndexOfAttribute3("absolute change")]+" "+sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+				}
+				outputData += "<br />";
+			}
+			return outputData;
 		}
-
-		return notification;
-
 
 	}
 
@@ -601,6 +609,36 @@ public class VTA {
 						return "Done";
 					}
 				}
+			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")){
+				return notificationData();
+			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
+				String data = "";
+				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+						data = DataBridge.getCompanyData(parameter.getValue().getAsString())[getIndexOfAttribute2("percentage change")];
+						if(data.charAt(0)=='+'){
+							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
+						}
+						else return parameter.getValue()+"is not doing well falling at "+data.substring(1);
+					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
+						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
+						String outputData = parameter.getValue().getAsString()+": <br />";
+						for (int i = 0; i < sectorData.size(); i++) {
+							if (sectorData.get(i) != null) {
+								outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
+								outputData += sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+							}
+							outputData += "<br />";
+						}
+						// The bank sector is positive/negative/mixed
+						return outputData;
+					}
+					else {
+						return "Sorry, I didn't catch that";
+					}
+				}
+
+
 			}
 			return response.getResult().getFulfillment().getSpeech();
 		} else {
