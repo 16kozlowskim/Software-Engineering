@@ -238,7 +238,10 @@ public class DataStore {
 		Connection connection = null;
 		try {
 			// create a database connection
-			connection = DriverManager.getConnection("jdbc:sqlite:./src/main/java/ai/api/examples/ai.db");
+
+			//connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\ai.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/ai.db");
+
 			return connection;
 		}
 		catch(SQLException e) {

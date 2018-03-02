@@ -48,8 +48,9 @@ import javax.xml.crypto.Data;
  */
 public class VTA {
 
+	private static boolean start = true;
 	private static final String INPUT_PROMPT = "> ";
-	private static int newsPreference;
+	private static int newsPreference = 3;
 	private static final String USER_AGENT = "Mozilla/5.0";
 
 
@@ -88,68 +89,9 @@ public class VTA {
 
 				try {
 					AIRequest request = new AIRequest(line);
-
 					AIResponse response = dataService.request(request);
+					interpretQuery(response);
 
-					if (response.getStatus().getCode() == 200) {
-						System.out.println(response.getResult().getFulfillment().getSpeech());
-						if (response.getResult().getMetadata().getIntentName().equals("CompanyQuery")) {
-							if (checkDate(response)) {
-								companyDateQuery(response);
-							} else {
-								companyQuery(response);
-							}
-						} else if (response.getResult().getMetadata().getIntentName().equals("SectorQuery")) {
-							if (checkDate(response)) {
-								sectorDateQuery(response);
-							} else {
-								sectorQuery(response);
-							}
-						} else if (response.getResult().getMetadata().getIntentName().equals("CompanyOrSectorQueryContext")) {
-							for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-								if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
-									if (checkDate(response)) {
-										companyDateQuery(response);
-									} else {
-										companyQuery(response);
-									}
-								} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
-									System.out.println("This is a sector context query");
-									if (checkDate(response)) {
-										sectorDateQuery(response);
-									} else {
-										sectorQuery(response);
-									}
-								}
-								else {
-									System.out.println("Sorry, I didn't catch that");
-								}
-							}
-						} else if (response.getResult().getMetadata().getIntentName().equals("News") || response.getResult().getMetadata().getIntentName().equals("NewsContext")) {
-							newsQuery(response);
-						} else if (response.getResult().getMetadata().getIntentName().equals("Top")) {
-							risersOrFallers(response,true);
-						} else if (response.getResult().getMetadata().getIntentName().equals("Bottom")) {
-							risersOrFallers(response,false);
-						} else if (response.getResult().getMetadata().getIntentName().equals("UpdateFrequency")) {
-							System.out.println("This is a frequency update");
-						} else if (response.getResult().getMetadata().getIntentName().equals("ResetFavourites")) {
-							DataStore.resetDB();
-							System.out.println("Done");
-						} else if (response.getResult().getMetadata().getIntentName().equals("NewsPreference")) {
-							for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-								if (parameter.getKey().equals("number-integer")) {
-									newsPreference = parameter.getValue().getAsInt();
-									System.out.println("Done");
-								}
-							}
-						}
-						for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-							System.out.printf("%s : %s%n", parameter.getKey(), parameter.getValue());
-						}
-					} else {
-						System.err.println(response.getStatus().getErrorDetails());
-					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -262,7 +204,7 @@ public class VTA {
 	 * Handles current company queries
 	 * @param response The chatbot's response to the user's query
 	 */
-	public static void companyQuery(AIResponse response){
+	public static String companyQuery(AIResponse response){
 		String ticker = "";
 		String data[] = new String[2];
 		JsonArray attributes;
@@ -282,16 +224,21 @@ public class VTA {
 				DataStore.incrementCompany(ticker);
 			}
 		}
+		String outputData = response.getResult().getFulfillment().getSpeech()+": " +"<br />";
 		for (int i = 0; i < 2; i++) {
-			if (data[i] != null) System.out.println(data[i]);
+			if (data[i] != null) {
+				System.out.println(data[i]);
+				outputData += data[i] + "<br />";
+			}
 		}
+		return outputData;
 	}
 
 	/**
 	 * Handles historical company queries
 	 * @param response The chatbot's response to the user's query
 	 */
-	public static void companyDateQuery(AIResponse response){
+	public static String companyDateQuery(AIResponse response){
 		String ticker = "";
 		String date = "";
 		String data[] = new String[2];
@@ -314,16 +261,21 @@ public class VTA {
 				DataStore.incrementCompany(ticker);
 			}
 		}
+		String outputData = response.getResult().getFulfillment().getSpeech()+": "+"<br />";
 		for (int i = 0; i < 2; i++) {
-			if (data[i] != null) System.out.println(data[i]);
+			if (data[i] != null) {
+				System.out.println(data[i]);
+				outputData += data[i] + "<br />";
+			}
 		}
+		return outputData;
 	}
 
 	/**
 	 * Handles current sector queries
 	 * @param response The chatbot's response to the user's query
 	 */
-	public static void sectorQuery(AIResponse response){
+	public static String sectorQuery(AIResponse response){
 		String ticker = "";
 		String sectorNum = "";
 		ArrayList<String[]> data = new ArrayList<>();
@@ -342,27 +294,36 @@ public class VTA {
 		for (int j = 0; j < attributes.size(); j++) {
 			DataStore.incrementAttribute(attributes.get(j).getAsString());
 		}
+		String outputData = response.getResult().getFulfillment().getSpeech()+": "+"<br />";
 		for (int i = 0; i < data.size(); i++) {
 			if (data.get(i) != null) {
+				outputData += data.get(i)[1]+" ("+data.get(i)[0]+"): "+"<br />";
 				System.out.print(data.get(i)[1]+" ("+data.get(i)[0]+"): ");
 				for (int j = 0; j < attributes.size(); j++) {
 					try {
+						outputData += data.get(i)[getIndexOfAttribute3(attributes.get(j).getAsString())]+" ";
 						System.out.print(data.get(i)[getIndexOfAttribute3(attributes.get(j).getAsString())]+" ");
 					} catch (IndexOutOfBoundsException e) {
 						System.out.print("Sorry, I couldn't find that for you");
+
+						outputData = "Sorry, I couldn't find that for you";
+
 					}
 				}
 			}
 			System.out.println();
+			outputData += "<br />";
 		}
+		return outputData;
 	}
 
 	/**
 	 * Handles historical sector queries
 	 * @param response The chatbot's response to the user's query
 	 */
-	public static void sectorDateQuery(AIResponse response){
+	public static String sectorDateQuery(AIResponse response){
 		System.out.println("Sorry, I can't find historical data on sectors yet");
+		return "Sorry, I can't find historical data on sectors yet";
 	}
 
 	/**
@@ -371,8 +332,9 @@ public class VTA {
 	 * @param risers <code>true</code> To lookup the risers
 	 *               <code>false</code> To lookup the fallers
 	 */
-	public static void risersOrFallers(AIResponse response, Boolean risers){
+	public static String risersOrFallers(AIResponse response, Boolean risers){
 		int top;
+		String outputData = response.getResult().getFulfillment().getSpeech()+": <br />";
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
 			if (parameter.getKey().equals("number-integer")) {
 				top = parameter.getValue().getAsInt();
@@ -380,18 +342,21 @@ public class VTA {
 				for (int i = 0; i < data.size() && i < top; i++) {
 					for (int j = 0; j < data.get(i).length; j++) {
 						System.out.print(data.get(i)[j]);
+						outputData += data.get(i)[j];
 					}
 					System.out.println();
+					outputData += "<br />";
 				}
 			}
 		}
+		return outputData;
 	}
 
 	/**
 	 * Handles news queries
 	 * @param response The chatbot's response to the user's query
 	 */
-	public static void newsQuery(AIResponse response){
+	public static String newsQuery(AIResponse response){
 		String ticker = "";
 		boolean company = false;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
@@ -407,9 +372,17 @@ public class VTA {
 			}
 		}
 		String[] data = DataBridge.getNews(ticker,company,newsPreference);
+		String outputData = "<p>"+response.getResult().getFulfillment().getSpeech()+": <br />";
 		for (int i = 0; i < data.length; i++) {
-			if(data[i]!= null)System.out.println(data[i]);
+
+			if((i+1) % 3 == 0 && data[i] != null){
+				outputData += "<a href=\""+data[i-1]+"\">"+data[i-2]+"</a><br />"+data[i]+"<br />";
+			}
+			else if(data[i]!= null){
+				System.out.println(data[i]);
+			}
 		}
+		return outputData+"</p>";
 	}
 
 	/**
@@ -446,7 +419,7 @@ public class VTA {
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < risers.size(); j++) {
 				if (favourites.get(i).equals(risers.get(j)[0]));
-					favouritesInRisers.add(favourites.get(i));
+				favouritesInRisers.add(favourites.get(i));
 			}
 		}
 
@@ -472,33 +445,38 @@ public class VTA {
 	 * [companyName, attributeName] or [sectorName, null]
 	 * @return
 	 */
-	public static String[] notificationData() {
+
+	public static String notificationData() {
 		ArrayList<String> favourites = null;
 		String company = null;
 		String sector = null;
-		String[] notification = new String[2];
 
 		Random rng = new Random();
-
+		favourites = DataStore.getFavouriteCompanies(5);
+		company = favourites.get(rng.nextInt(5));
+		favourites = DataStore.getFavouriteSectors(5);
+		sector = favourites.get(rng.nextInt(5));
 		if (rng.nextInt(10) < 7) {
-			favourites = DataStore.getFavouriteCompanies(5);
-			company = favourites.get(rng.nextInt(5));
 			ArrayList<String> favouriteAttributes = DataStore.getFavouriteAttributes(5);
 			String attribute = favouriteAttributes.get(rng.nextInt(5));
 
-			notification[0] = company;
-			notification[1] = attribute;
-
+			String[] data = DataBridge.getCompanyData(company);
+			System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)]);
+			return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)];
 		}
 		else {
-			favourites = DataStore.getFavouriteSectors(5);
-			sector = favourites.get(rng.nextInt(5));
-			notification[0] = sector;
-			notification[1] = null;
+			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sector));
+			String outputData = sector+": <br />";
+			for (int i = 0; i < sectorData.size(); i++) {
+				if (sectorData.get(i) != null) {
+					outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
+					System.out.print(sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): ");
+					outputData += sectorData.get(i)[getIndexOfAttribute3("price")]+" "+sectorData.get(i)[getIndexOfAttribute3("absolute change")]+" "+sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+				}
+				outputData += "<br />";
+			}
+			return outputData;
 		}
-
-		return notification;
-
 
 	}
 
@@ -561,6 +539,112 @@ public class VTA {
 		wr.flush();
 		wr.close();
 
+	}
+
+	public static String interpretQuery(AIResponse response){
+		if(start){
+			try {
+				resetCompanies();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			start = false;
+		}
+		if (response.getStatus().getCode() == 200) {
+			System.out.println(response.getResult().getFulfillment().getSpeech());
+			if (response.getResult().getMetadata().getIntentName().equals("CompanyQuery")) {
+				if (checkDate(response)) {
+					return companyDateQuery(response);
+				} else {
+					return companyQuery(response);
+				}
+			} else if (response.getResult().getMetadata().getIntentName().equals("SectorQuery")) {
+				if (checkDate(response)) {
+					return sectorDateQuery(response);
+				} else {
+					return sectorQuery(response);
+				}
+			} else if (response.getResult().getMetadata().getIntentName().equals("CompanyOrSectorQueryContext")) {
+				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+						if (checkDate(response)) {
+							return companyDateQuery(response);
+						} else {
+							return companyQuery(response);
+						}
+					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
+						System.out.println("This is a sector context query");
+						if (checkDate(response)) {
+							return sectorDateQuery(response);
+						} else {
+							return sectorQuery(response);
+						}
+					}
+					else {
+						System.out.println("Sorry, I didn't catch that");
+					}
+				}
+			} else if (response.getResult().getMetadata().getIntentName().equals("News") || response.getResult().getMetadata().getIntentName().equals("NewsContext")) {
+				return newsQuery(response);
+			} else if (response.getResult().getMetadata().getIntentName().equals("Top")) {
+				return risersOrFallers(response,true);
+			} else if (response.getResult().getMetadata().getIntentName().equals("Bottom")) {
+				return risersOrFallers(response,false);
+			} else if (response.getResult().getMetadata().getIntentName().equals("UpdateFrequency")) {
+				System.out.println("This is a frequency update");
+				return "This is a frequency update";
+			} else if (response.getResult().getMetadata().getIntentName().equals("ResetFavourites")) {
+				try {
+					DataStore.resetDB();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Done");
+				return "Done";
+			} else if (response.getResult().getMetadata().getIntentName().equals("NewsPreference")) {
+				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+					if (parameter.getKey().equals("number-integer")) {
+						newsPreference = parameter.getValue().getAsInt();
+						System.out.println("Done");
+						return "Done";
+					}
+				}
+			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")){
+				return notificationData();
+			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
+				String data = "";
+				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+						data = DataBridge.getCompanyData(parameter.getValue().getAsString())[getIndexOfAttribute2("percentage change")];
+						if(data.charAt(0)=='+'){
+							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
+						}
+						else return parameter.getValue()+"is not doing well falling at "+data.substring(1);
+					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
+						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
+						String outputData = parameter.getValue().getAsString()+": <br />";
+						for (int i = 0; i < sectorData.size(); i++) {
+							if (sectorData.get(i) != null) {
+								outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
+								outputData += sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+							}
+							outputData += "<br />";
+						}
+						// The bank sector is positive/negative/mixed
+						return outputData;
+					}
+					else {
+						return "Sorry, I didn't catch that";
+					}
+				}
+
+
+			}
+			return response.getResult().getFulfillment().getSpeech();
+		} else {
+			System.err.println(response.getStatus().getErrorDetails());
+		}
+		return "";
 	}
 
 }

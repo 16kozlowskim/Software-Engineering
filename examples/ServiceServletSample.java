@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ai.api.examples.web;
+package ai.api.examples;
 
 import java.io.IOException;
 
@@ -34,30 +34,30 @@ import ai.api.web.AIServiceServlet;
  * Servlet implementation class AIServiceServlet
  */
 @WebServlet(urlPatterns = {"/ai"}, initParams = {
-        @WebInitParam(name = ServiceServletSample.PARAM_API_AI_KEY,
-                value = "b611bac8ca534ecd93e2a45e82da0f62")})
+    @WebInitParam(name = ServiceServletSample.PARAM_API_AI_KEY,
+        value = "b611bac8ca534ecd93e2a45e82da0f62")})
 public class ServiceServletSample extends AIServiceServlet {
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            AIResponse aiResponse = request(request.getParameter("query"), request.getSession());
-            response.setContentType("text/plain");
-            response.getWriter().append(aiResponse.getResult().getFulfillment().getSpeech());
-        } catch (AIServiceException e) {
-            e.printStackTrace();
-        }
+  /**
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+   */
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    try {
+      AIResponse aiResponse = request(request.getParameter("query"), request.getSession());
+      response.setContentType("text/html");
+      response.getWriter().append(VTA.interpretQuery(aiResponse));
+    } catch (AIServiceException e) {
+      e.printStackTrace();
     }
+  }
 
-    /**
-     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doGet(request, response);
-    }
+  /**
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+   */
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
+    doGet(request, response);
+  }
 }

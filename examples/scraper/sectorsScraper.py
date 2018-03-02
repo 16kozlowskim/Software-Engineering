@@ -47,7 +47,10 @@ from bs4 import BeautifulSoup
 # Tobacco - 3780
 # Travel & Leisure - 5750
 def get_sector_data(sector_num):
-    pathToCSV = './src/main/java/ai/api/examples/fileStore/file.csv'
+
+    #pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
+    pathToCSV = '/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/fileStore/file.csv'
+
     url_builder = []
     url_builder.append('http://www.londonstockexchange.com/exchange/prices-and-markets/stocks/indices/constituents-indices.html?index=UKX&industrySector=')
     url_builder.append(sector_num)

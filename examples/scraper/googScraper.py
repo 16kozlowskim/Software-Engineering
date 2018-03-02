@@ -5,7 +5,10 @@ from bs4 import BeautifulSoup
 def get_company_data(ticker):
     url = 'https://finance.google.com/finance?q=lon:'
     url += ticker
-    pathToCSV = './src/main/java/ai/api/examples/fileStore/file.csv'
+
+    pathToCSV = '/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/fileStore/file.csv'
+    #pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
+
     page = urllib2.urlopen(url)
     soup = BeautifulSoup(page, 'html.parser')
 
