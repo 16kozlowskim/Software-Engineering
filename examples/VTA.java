@@ -438,6 +438,30 @@ public class VTA {
 		return false;
 	}
 
+	public static ArrayList<String[]> aiNews() {
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
+
+		ArrayList<String[]> companyData = new ArrayList<>();
+		ArrayList<String[]> sectorData = new ArrayList<>();
+
+		for (String search : favouriteCompanies) {
+			companyData.add(DataBridge.getNews(search, true, 1));
+		}
+		for (String search : favouriteSectors) {
+			sectorData.add(DataBridge.getNews(search, false, 1));
+		}
+
+		ArrayList<String[]> outputData = new ArrayList<>();
+
+		for (int i = 0; i < companyData.size(); i++) {
+			outputData.add(companyData.get(i));
+			outputData.add(sectorData.get(i));
+		}
+
+		return outputData;
+	}
+
 	/**
 	 * Returns the favourites in risers and fallers as two arraylists in an array:
 	 * [riserCompany1Data[], riserCompany2Data[], ...]
