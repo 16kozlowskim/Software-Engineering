@@ -474,6 +474,41 @@ public class VTA {
 		return arr;
 	}
 
+	public static String aiData(){
+		ArrayList<String> companies = DataStore.getFavouriteCompanies(3);
+		String outputData = "<table>";
+		ArrayList<String> favouriteAttributes = DataStore.getFavouriteAttributes(3);
+		outputData += "<tr><td>NAME</td><td>"+favouriteAttributes.get(0).toUpperCase()+"</td>"+"<td>"+favouriteAttributes.get(1).toUpperCase()+"</td>"+"<td>"+favouriteAttributes.get(2).toUpperCase()+"</td></tr>";
+
+		for(int i = 0; i < companies.size(); i++){
+			outputData += "<tr> <td>"+companies.get(i)+"</td>";
+			String[] companyData = DataBridge.getCompanyData(companies.get(i));
+			for(int j = 0; j < favouriteAttributes.size(); j++) {
+				try {
+					outputData += "<td>"+companyData[getIndexOfAttribute2(favouriteAttributes.get(j))]+"</td>";
+				} catch (IndexOutOfBoundsException e) {
+
+				}
+			}
+			outputData += "</tr>";
+		}
+		outputData += "</table>";
+		ArrayList<String> sectors = DataStore.getFavouriteSectors(2);
+		for(int i = 0; i < sectors.size(); i++){
+			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sectors.get(i)));
+			outputData += sectors.get(i)+": <br />";
+			for (int j = 0; j < sectorData.size(); j++) {
+				if (sectorData.get(j) != null) {
+					outputData += sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): "+"<br />";
+					System.out.print(sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): ");
+					outputData += sectorData.get(j)[getIndexOfAttribute3("price")]+" "+sectorData.get(j)[getIndexOfAttribute3("absolute change")]+" "+sectorData.get(j)[getIndexOfAttribute3("percentage change")];
+				}
+				outputData += "<br />";
+			}
+		}
+		return outputData;
+	}
+
 	/**
 	 * Used to create AI notifications about favourite company or sector with a favourite attribute.
 	 * Favourite attributes won't be used in case the query is about a sector, rather all the data will be displayed.
@@ -650,7 +685,7 @@ public class VTA {
 					}
 				}
 			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")){
-				return notificationData();
+				return aiData();
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
