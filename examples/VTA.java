@@ -440,34 +440,37 @@ public class VTA {
 
 	/**
 	 * Returns the favourites in risers and fallers as two arraylists in an array:
-	 * [riserCompany1, riserCompany2, ...]
-	 * [fallerCompany1, fallerCompany2, ...]
-	 *
+	 * [riserCompany1Data[], riserCompany2Data[], ...]
+	 * [fallerCompany1Data[], fallerCompany2Data[], ...]
+	 * .
+	 * .
+	 * .
 	 * @return
 	 */
-	public static ArrayList<ArrayList<String>> favouritesInRisersFallers() {
+	public static ArrayList<ArrayList<String[]>> favouritesInRisersFallers() {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
-		ArrayList<String> favourites = DataStore.getFavouriteCompanies(5);
-		ArrayList<String> favouritesInRisers = new ArrayList<>();
-		ArrayList<String> favouritesInFallers = new ArrayList<>();
+		ArrayList<String> favourites = DataStore.getFavouriteCompanies(3);
+		ArrayList<String[]> favouritesInRisers = new ArrayList<>();
+		ArrayList<String[]> favouritesInFallers = new ArrayList<>();
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < risers.size(); j++) {
-				if (favourites.get(i).equals(risers.get(j)[0]));
-				favouritesInRisers.add(favourites.get(i));
+				if (favourites.get(i).equals(risers.get(j)[0])) {
+					favouritesInRisers.add(risers.get(j));
+				}
 			}
 		}
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < fallers.size(); j++) {
 				if (favourites.get(i).equals(fallers.get(j)[0]));
-				favouritesInFallers.add(favourites.get(i));
+				favouritesInFallers.add(fallers.get(i));
 			}
 		}
 
-		ArrayList<ArrayList<String>> arr = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String[]>> arr = new ArrayList<>();
 		arr.add(favouritesInRisers);
 		arr.add(favouritesInFallers);
 
