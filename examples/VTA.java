@@ -146,7 +146,7 @@ public class VTA {
 		if (attribute.toLowerCase().equals("percentage change")) {
 			return 2;
 		}
-		if (attribute.toLowerCase().equals("day low-high") || attribute.toLowerCase().equals("low") || attribute.toLowerCase().equals("high")) {
+		if (attribute.toLowerCase().equals("day low-high") || attribute.toLowerCase().equals("day low") || attribute.toLowerCase().equals("day high")) {
 			return 3;
 		}
 		if (attribute.toLowerCase().equals("52 low-high")) {
@@ -497,8 +497,12 @@ public class VTA {
 			String attribute = favouriteAttributes.get(rng.nextInt(5));
 
 			String[] data = DataBridge.getCompanyData(company);
-			System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)]);
-			return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)];
+			try{
+				System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)]);
+				return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)];
+			} catch(IndexOutOfBoundsException e){
+				return notificationData();
+			}
 		}
 		else {
 			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sector));
@@ -511,6 +515,7 @@ public class VTA {
 				}
 				outputData += "<br />";
 			}
+			System.out.println("NofiticationData() finished");
 			return outputData;
 		}
 	}
