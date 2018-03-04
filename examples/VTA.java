@@ -265,9 +265,10 @@ public class VTA {
 		String data[] = new String[2];
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName"))
+			if (parameter.getKey().equals("CompanyName")){
 				ticker = parameter.getValue().getAsString();
 				DataStore.incrementCompany(ticker);
+			}
 			if (parameter.getKey().equals("date")) {
 				date = parameter.getValue().getAsString().replace("-", "");
 			}
@@ -438,36 +439,63 @@ public class VTA {
 		return false;
 	}
 
+	public static ArrayList<String[]> aiNews() {
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
+
+		ArrayList<String[]> companyData = new ArrayList<>();
+		ArrayList<String[]> sectorData = new ArrayList<>();
+
+		for (String search : favouriteCompanies) {
+			companyData.add(DataBridge.getNews(search, true, 1));
+		}
+		for (String search : favouriteSectors) {
+			sectorData.add(DataBridge.getNews(search, false, 1));
+		}
+
+		ArrayList<String[]> outputData = new ArrayList<>();
+
+		for (int i = 0; i < companyData.size(); i++) {
+			outputData.add(companyData.get(i));
+			outputData.add(sectorData.get(i));
+		}
+
+		return outputData;
+	}
+
 	/**
 	 * Returns the favourites in risers and fallers as two arraylists in an array:
-	 * [riserCompany1, riserCompany2, ...]
-	 * [fallerCompany1, fallerCompany2, ...]
-	 *
+	 * [riserCompany1Data[], riserCompany2Data[], ...]
+	 * [fallerCompany1Data[], fallerCompany2Data[], ...]
+	 * .
+	 * .
+	 * .
 	 * @return
 	 */
-	public static ArrayList<ArrayList<String>> favouritesInRisersFallers() {
+	public static ArrayList<ArrayList<String[]>> favouritesInRisersFallers() {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
-		ArrayList<String> favourites = DataStore.getFavouriteCompanies(5);
-		ArrayList<String> favouritesInRisers = new ArrayList<>();
-		ArrayList<String> favouritesInFallers = new ArrayList<>();
+		ArrayList<String> favourites = DataStore.getFavouriteCompanies(3);
+		ArrayList<String[]> favouritesInRisers = new ArrayList<>();
+		ArrayList<String[]> favouritesInFallers = new ArrayList<>();
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < risers.size(); j++) {
-				if (favourites.get(i).equals(risers.get(j)[0]));
-				favouritesInRisers.add(favourites.get(i));
+				if (favourites.get(i).equals(risers.get(j)[0])) {
+					favouritesInRisers.add(risers.get(j));
+				}
 			}
 		}
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < fallers.size(); j++) {
 				if (favourites.get(i).equals(fallers.get(j)[0]));
-				favouritesInFallers.add(favourites.get(i));
+				favouritesInFallers.add(fallers.get(i));
 			}
 		}
 
-		ArrayList<ArrayList<String>> arr = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String[]>> arr = new ArrayList<>();
 		arr.add(favouritesInRisers);
 		arr.add(favouritesInFallers);
 
