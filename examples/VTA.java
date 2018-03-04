@@ -442,6 +442,12 @@ public class VTA {
 		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
 		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
 
+		for (int i = 0; i < 5; i++) {
+			System.out.println(favouriteCompanies.get(i));
+			System.out.println(favouriteSectors.get(i));
+
+		}
+
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
 
