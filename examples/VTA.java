@@ -542,15 +542,13 @@ public class VTA {
 		ArrayList<String> sectors = DataStore.getFavouriteSectors(2);
 		for(int i = 0; i < sectors.size(); i++){
 			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sectors.get(i)));
-			outputData += sectors.get(i)+": <br />";
+			outputData += sectors.get(i)+":<br /><table><tr><td>Name</td><td>Price</td><td>Change</td><td>% Change</td></tr>";
 			for (int j = 0; j < sectorData.size(); j++) {
 				if (sectorData.get(j) != null) {
-					outputData += sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): "+"<br />";
-					System.out.print(sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): ");
-					outputData += sectorData.get(j)[getIndexOfAttribute3("price")]+" "+sectorData.get(j)[getIndexOfAttribute3("absolute change")]+" "+sectorData.get(j)[getIndexOfAttribute3("percentage change")];
+					outputData += "<tr><td>"+sectorData.get(j)[1]+"("+sectorData.get(j)[0]+")</td><td>"+sectorData.get(j)[getIndexOfAttribute3("price")]+"</td><td>"+sectorData.get(j)[getIndexOfAttribute3("absolute change")]+"</td><td>"+sectorData.get(j)[getIndexOfAttribute3("percentage change")]+"</td></tr>";
 				}
-				outputData += "<br />";
 			}
+			outputData += "</table>";
 		}
 		return outputData;
 	}
@@ -747,7 +745,7 @@ public class VTA {
 						if(data.charAt(0)=='+'){
 							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
 						}
-						else return parameter.getValue()+"is not doing well falling at "+data.substring(1);
+						else return parameter.getValue()+"is not doing well falling at "+data;
 					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
 						DataStore.incrementSector(parameter.getValue().getAsString());
 						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
