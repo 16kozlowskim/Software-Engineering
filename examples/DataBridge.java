@@ -8,6 +8,55 @@ public class DataBridge {
 	private static final String csvFile = "C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv";
 
 
+	public static double getRollingAverage(String companySymbol) {
+		String symbol = companySymbol.replace(".", "");
+		symbol = symbol.toUpperCase();
+
+		String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\rolling.py "+ symbol;
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/rolling.py " + symbol;
+
+		String s = "";
+		String csvSplitBy = "@";
+		double sum = 0;
+
+
+		List<String> tmp = new ArrayList<>();
+
+		try {
+			Process p = Runtime.getRuntime().exec(cmd);
+			try {
+				p.waitFor();
+			} catch (InterruptedException e) {
+				System.out.println(e.getMessage());
+			}
+			FileReader file = new FileReader(csvFile);
+			BufferedReader stdInput = new BufferedReader(file);
+			int counter = 0;
+
+			while ((s = stdInput.readLine()) != null) {
+				if (s.length() > 0 && counter > 14){
+					tmp.add(s.split(csvSplitBy)[1]);
+				}
+				counter++;
+			}
+			stdInput.close();
+			file.close();
+		} catch (IOException e) {
+			System.out.print(e.getMessage());
+		}
+
+		for (int i = tmp.size()-1 ; i>=0; i--) {
+			sum += Double.parseDouble(tmp.get(i));
+		}
+
+		double avg = sum / tmp.size();
+		/*avg = avg*100;
+		avg = Math.round(avg);
+		avg = avg /100;*/
+
+		return avg;
+	}
+
 	/**
 	 * Gets a news article on a company
 	 * @param  String search

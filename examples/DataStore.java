@@ -11,6 +11,26 @@ public class DataStore {
 
 	private static final HashMap<String, String> companyInfo = DataBridge.fillCompany();
 	private static final HashMap<String, String> sectorNumbers = getSectorNumbers();
+	private static HashMap<String, Double> rollingAverage = fillRollingAvg();
+
+	public static HashMap<String, Double> fillRollingAvg() {
+
+		HashMap<String, Double> rolling = new HashMap<>();
+
+		companyInfo.forEach((k, v) -> {
+			rolling.put(v, 0.0);
+		});
+
+		return rolling;
+	}
+
+	public static double getRollingAvg(String symbol) {
+		return rollingAverage.get(symbol);
+	}
+
+	public static void updateRollingAvg(String symbol, double newAvg) {
+		rollingAverage.replace(symbol, newAvg);
+	}
 
 	public static HashMap<String, String> getCompanyInfo() {
 		return companyInfo;
