@@ -33,12 +33,14 @@ def get_data(rss, num):
 
 
                 if sent[0] < 0 :
-                    sent = 50 - (sent[0]*-50)
+                   sent = 50 - (sent[0]*-50)
                 else :
-                    sent = sent[0]*50 + 50
+                   sent = sent[0]*50 + 50
 
 
                 wr.writerow([str(round(sent, 2))+'%'])
+                #wr.writerow(['987'])
+
             except TypeError:
                 wr.writerow(['Sentiment Unavailable'])
 

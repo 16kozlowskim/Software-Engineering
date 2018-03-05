@@ -438,38 +438,34 @@ public class VTA {
 		return false;
 	}
 
-	public static String aiNews() {
-		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
-		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
-
-		for (int i = 0; i < 5; i++) {
-			System.out.println(favouriteCompanies.get(i));
-			System.out.println(favouriteSectors.get(i));
-		}
+	public static ArrayList<String[]> aiNews() {
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(1);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(1);
 
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
 
 		for (String search : favouriteCompanies) {
-			companyData.add(DataBridge.getNews(search, true, 1));
+			companyData.add(DataBridge.getNews(search, true, 5));
 		}
 		for (String search : favouriteSectors) {
-			sectorData.add(DataBridge.getNews(search, false, 1));
+			sectorData.add(DataBridge.getNews(search, false, 5));
 		}
 
 		ArrayList<String[]> outputData = new ArrayList<>();
-
+		System.out.println("companyData.size(): "+companyData.size());
 		for (int i = 0; i < companyData.size(); i++) {
 			outputData.add(companyData.get(i));
 			outputData.add(sectorData.get(i));
 		}
-		String outputDataString = "";
+		return outputData;
+		/*String outputDataString = "";
 		for(int i = 0; i < outputData.size();i++){
 			for(int j = 0; j < outputData.get(i).length; j++){
 				outputDataString += outputData.get(i)[j]+"<br />";
 			}
 		}
-		return outputDataString;
+		return outputDataString;*/
 	}
 
 	/**
@@ -485,7 +481,7 @@ public class VTA {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
-		ArrayList<String> favourites = DataStore.getFavouriteCompanies(3);
+		ArrayList<String> favourites = DataStore.getFavouriteCompanies(5);
 		ArrayList<String[]> favouritesInRisers = new ArrayList<>();
 		ArrayList<String[]> favouritesInFallers = new ArrayList<>();
 
@@ -499,23 +495,26 @@ public class VTA {
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < fallers.size(); j++) {
-				if (favourites.get(i).equals(fallers.get(j)[0]));
-				favouritesInFallers.add(fallers.get(i));
+				if (favourites.get(i).equals(fallers.get(j)[0])){
+					favouritesInFallers.add(fallers.get(j));
+				}
 			}
 		}
 		String outputData = "";
 		if(rise) {
 			for (int i = 0; i < favouritesInRisers.size(); i++) {
+				outputData += favouritesInRisers.get(i)[1]+" ("+favouritesInRisers.get(i)[0]+"): Price:"+favouritesInRisers.get(i)[2]+" Day Change:"+favouritesInRisers.get(i)[3]+", "+favouritesInRisers.get(i)[4]+"<br />";
 				for (int j = 0; j < favouritesInRisers.get(i).length; j++) {
 					outputData += favouritesInRisers.get(i)[j] + "<br />";
 				}
 			}
 		}
-		else if(falls){
+		if(falls){
 			for (int i = 0; i < favouritesInFallers.size(); i++) {
 				for (int j = 0; j < favouritesInFallers.get(i).length; j++) {
-					outputData += favouritesInFallers.get(i)[j] + "<br />";
+					outputData += favouritesInFallers.get(i)[j] +" ";
 				}
+				outputData+="<br />";
 			}
 		}
 		return outputData;
@@ -732,7 +731,7 @@ public class VTA {
 					}
 				}
 			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")) {
-				return aiNews();
+				return aiData();
 			} else if (response.getResult().getMetadata().getIntentName().equals("favouritesInRisers")) {
 				return favouritesInRisersFallers(true, false);
 			}else if (response.getResult().getMetadata().getIntentName().equals("favouritesInFallers")) {

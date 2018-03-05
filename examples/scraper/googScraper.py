@@ -14,7 +14,7 @@ def get_company_data(ticker):
     with open(pathToCSV, 'w') as csvfile:
         wr = csv.writer(csvfile, delimiter='@', quotechar='#')
         wr.writerow([div.find('span', attrs={'class' : 'pr'}).text.strip().encode('utf-8')])
-        for e in div.find('div', attrs={'class' : 'id-price-change nwp'}).text.strip().split('\n'):
+        for e in div.find('div', attrs={'class' : 'id-price-change nwp'}).text.strip().split('\r\n'):
             wr.writerow([e])
 
         div = soup.find('div', attrs={'class' : 'snap-panel'})
