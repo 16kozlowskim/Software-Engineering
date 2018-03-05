@@ -265,9 +265,10 @@ public class VTA {
 		String data[] = new String[2];
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName"))
+			if (parameter.getKey().equals("CompanyName")){
 				ticker = parameter.getValue().getAsString();
-			DataStore.incrementCompany(ticker);
+				DataStore.incrementCompany(ticker);
+			}
 			if (parameter.getKey().equals("date")) {
 				date = parameter.getValue().getAsString().replace("-", "");
 			}
@@ -439,23 +440,17 @@ public class VTA {
 	}
 
 	public static ArrayList<String[]> aiNews() {
-		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
-		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
-
-		for (int i = 0; i < 5; i++) {
-			System.out.println(favouriteCompanies.get(i));
-			System.out.println(favouriteSectors.get(i));
-
-		}
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(2);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(2);
 
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
 
 		for (String search : favouriteCompanies) {
-			companyData.add(DataBridge.getNews(search, true, 1));
+			companyData.add(DataBridge.getNews(search, true, 3));
 		}
 		for (String search : favouriteSectors) {
-			sectorData.add(DataBridge.getNews(search, false, 1));
+			sectorData.add(DataBridge.getNews(search, false, 3));
 		}
 
 		ArrayList<String[]> outputData = new ArrayList<>();

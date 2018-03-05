@@ -19,6 +19,7 @@ package ai.api.examples;
 import ai.api.AIServiceException;
 import ai.api.model.AIResponse;
 import ai.api.web.AIServiceServlet;
+import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -32,8 +33,8 @@ import java.io.IOException;
 /**
  * Servlet implementation class AIServiceServlet
  */
-@WebServlet(urlPatterns = {"/alertServlet"})
-public class alertServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/newsServlet"})
+public class newsServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -41,12 +42,13 @@ public class alertServlet extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //  try {
+// try {
         response.setContentType("text/html");
-        response.getWriter().append("");
+        String jsonResponse = new Gson().toJson(VTA.aiNews());
+        response.getWriter().append(jsonResponse);
         // } catch (AIServiceException e) {
-        //    e.printStackTrace();
-        // }
+        //   e.printStackTrace();
+        //  }
     }
 
     /**
