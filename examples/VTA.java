@@ -204,7 +204,7 @@ public class VTA {
 	 * @param response The chatbot's response to the user's query
 	 */
 	public static String companyQuery(AIResponse response){
-		System.out.println(rollingAverage("GSK"));
+
 		String ticker = "";
 		String data[] = new String[2];
 		JsonArray attributes;

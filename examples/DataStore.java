@@ -18,7 +18,7 @@ public class DataStore {
 		HashMap<String, Double> rolling = new HashMap<>();
 
 		companyInfo.forEach((k, v) -> {
-			rolling.put(k, 0.0);
+			rolling.put(v, 0.0);
 		});
 
 		return rolling;

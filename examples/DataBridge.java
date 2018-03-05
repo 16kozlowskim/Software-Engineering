@@ -21,7 +21,7 @@ public class DataBridge {
 
 		String s = "";
 		String csvSplitBy = "@";
-		int sum = 0;
+		double sum = 0;
 
 
 		List<String> tmp = new ArrayList<>();
@@ -54,9 +54,9 @@ public class DataBridge {
 		}
 
 		double avg = sum / tmp.size();
-		avg = avg*100;
+		/*avg = avg*100;
 		avg = Math.round(avg);
-		avg = avg /100;
+		avg = avg /100;*/
 
 		return avg;
 	}
