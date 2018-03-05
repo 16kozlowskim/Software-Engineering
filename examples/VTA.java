@@ -16,7 +16,6 @@
 
 package ai.api.examples;
 
-import java.sql.Array;
 import java.util.StringJoiner;
 import java.util.Random;
 
@@ -205,6 +204,7 @@ public class VTA {
 	 * @param response The chatbot's response to the user's query
 	 */
 	public static String companyQuery(AIResponse response){
+		System.out.println(rollingAverage("GSK"));
 		String ticker = "";
 		String data[] = new String[2];
 		JsonArray attributes;
@@ -265,10 +265,9 @@ public class VTA {
 		String data[] = new String[2];
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName")){
+			if (parameter.getKey().equals("CompanyName"))
 				ticker = parameter.getValue().getAsString();
-				DataStore.incrementCompany(ticker);
-			}
+			DataStore.incrementCompany(ticker);
 			if (parameter.getKey().equals("date")) {
 				date = parameter.getValue().getAsString().replace("-", "");
 			}
@@ -440,27 +439,33 @@ public class VTA {
 	}
 
 	public static ArrayList<String[]> aiNews() {
-		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(2);
-		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(2);
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(1);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(1);
 
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
 
 		for (String search : favouriteCompanies) {
-			companyData.add(DataBridge.getNews(search, true, 3));
+			companyData.add(DataBridge.getNews(search, true, 5));
 		}
 		for (String search : favouriteSectors) {
-			sectorData.add(DataBridge.getNews(search, false, 3));
+			sectorData.add(DataBridge.getNews(search, false, 5));
 		}
 
 		ArrayList<String[]> outputData = new ArrayList<>();
-
+		System.out.println("companyData.size(): "+companyData.size());
 		for (int i = 0; i < companyData.size(); i++) {
 			outputData.add(companyData.get(i));
 			outputData.add(sectorData.get(i));
 		}
-
 		return outputData;
+		/*String outputDataString = "";
+		for(int i = 0; i < outputData.size();i++){
+			for(int j = 0; j < outputData.get(i).length; j++){
+				outputDataString += outputData.get(i)[j]+"<br />";
+			}
+		}
+		return outputDataString;*/
 	}
 
 	/**
@@ -472,11 +477,11 @@ public class VTA {
 	 * .
 	 * @return
 	 */
-	public static ArrayList<ArrayList<String[]>> favouritesInRisersFallers() {
+	public static String favouritesInRisersFallers(boolean rise, boolean falls) {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
-		ArrayList<String> favourites = DataStore.getFavouriteCompanies(3);
+		ArrayList<String> favourites = DataStore.getFavouriteCompanies(5);
 		ArrayList<String[]> favouritesInRisers = new ArrayList<>();
 		ArrayList<String[]> favouritesInFallers = new ArrayList<>();
 
@@ -490,16 +495,29 @@ public class VTA {
 
 		for (int i = 0; i < favourites.size(); i++) {
 			for (int j = 0; j < fallers.size(); j++) {
-				if (favourites.get(i).equals(fallers.get(j)[0]));
-				favouritesInFallers.add(fallers.get(i));
+				if (favourites.get(i).equals(fallers.get(j)[0])){
+					favouritesInFallers.add(fallers.get(j));
+				}
 			}
 		}
-
-		ArrayList<ArrayList<String[]>> arr = new ArrayList<>();
-		arr.add(favouritesInRisers);
-		arr.add(favouritesInFallers);
-
-		return arr;
+		String outputData = "";
+		if(rise) {
+			for (int i = 0; i < favouritesInRisers.size(); i++) {
+				outputData += favouritesInRisers.get(i)[1]+" ("+favouritesInRisers.get(i)[0]+"): Price:"+favouritesInRisers.get(i)[2]+" Day Change:"+favouritesInRisers.get(i)[3]+", "+favouritesInRisers.get(i)[4]+"<br />";
+				for (int j = 0; j < favouritesInRisers.get(i).length; j++) {
+					outputData += favouritesInRisers.get(i)[j] + "<br />";
+				}
+			}
+		}
+		if(falls){
+			for (int i = 0; i < favouritesInFallers.size(); i++) {
+				for (int j = 0; j < favouritesInFallers.get(i).length; j++) {
+					outputData += favouritesInFallers.get(i)[j] +" ";
+				}
+				outputData+="<br />";
+			}
+		}
+		return outputData;
 	}
 
 	public static String aiData(){
@@ -524,15 +542,13 @@ public class VTA {
 		ArrayList<String> sectors = DataStore.getFavouriteSectors(2);
 		for(int i = 0; i < sectors.size(); i++){
 			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(sectors.get(i)));
-			outputData += sectors.get(i)+": <br />";
+			outputData += sectors.get(i)+":<br /><table><tr><td>Name</td><td>Price</td><td>Change</td><td>% Change</td></tr>";
 			for (int j = 0; j < sectorData.size(); j++) {
 				if (sectorData.get(j) != null) {
-					outputData += sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): "+"<br />";
-					System.out.print(sectorData.get(j)[1]+" ("+sectorData.get(j)[0]+"): ");
-					outputData += sectorData.get(j)[getIndexOfAttribute3("price")]+" "+sectorData.get(j)[getIndexOfAttribute3("absolute change")]+" "+sectorData.get(j)[getIndexOfAttribute3("percentage change")];
+					outputData += "<tr><td>"+sectorData.get(j)[1]+"("+sectorData.get(j)[0]+")</td><td>"+sectorData.get(j)[getIndexOfAttribute3("price")]+"</td><td>"+sectorData.get(j)[getIndexOfAttribute3("absolute change")]+"</td><td>"+sectorData.get(j)[getIndexOfAttribute3("percentage change")]+"</td></tr>";
 				}
-				outputData += "<br />";
 			}
+			outputData += "</table>";
 		}
 		return outputData;
 	}
@@ -581,6 +597,18 @@ public class VTA {
 			System.out.println("NofiticationData() finished");
 			return outputData;
 		}
+	}
+
+	public static String rollingAverage(String symbol) {
+		double newAvg = DataBridge.getRollingAverage(symbol);
+
+		double oldAvg = DataStore.getRollingAvg(symbol);
+
+		DataStore.updateRollingAvg(symbol, newAvg);
+
+		if (oldAvg == 0) return "SMA: "+newAvg;
+
+		return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
 	}
 
 	public static void resetCompanies() throws Exception {
@@ -643,6 +671,7 @@ public class VTA {
 		wr.close();
 
 	}
+
 
 	public static String interpretQuery(AIResponse response){
 		if(start){
@@ -712,8 +741,14 @@ public class VTA {
 						return "Done";
 					}
 				}
-			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")){
+			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")) {
 				return aiData();
+			} else if (response.getResult().getMetadata().getIntentName().equals("favouritesInRisers")) {
+				return favouritesInRisersFallers(true, false);
+			}else if (response.getResult().getMetadata().getIntentName().equals("favouritesInFallers")) {
+				return favouritesInRisersFallers(false, true);
+			} else if (response.getResult().getMetadata().getIntentName().equals("favourites")){
+				return favouritesInRisersFallers(true,true);
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
@@ -723,7 +758,7 @@ public class VTA {
 						if(data.charAt(0)=='+'){
 							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
 						}
-						else return parameter.getValue()+"is not doing well falling at "+data.substring(1);
+						else return parameter.getValue()+"is not doing well falling at "+data;
 					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
 						DataStore.incrementSector(parameter.getValue().getAsString());
 						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
