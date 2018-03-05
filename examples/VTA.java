@@ -265,10 +265,9 @@ public class VTA {
 		String data[] = new String[2];
 		JsonArray attributes;
 		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName")){
+			if (parameter.getKey().equals("CompanyName"))
 				ticker = parameter.getValue().getAsString();
-				DataStore.incrementCompany(ticker);
-			}
+			DataStore.incrementCompany(ticker);
 			if (parameter.getKey().equals("date")) {
 				date = parameter.getValue().getAsString().replace("-", "");
 			}
@@ -439,9 +438,14 @@ public class VTA {
 		return false;
 	}
 
-	public static ArrayList<String[]> aiNews() {
+	public static String aiNews() {
 		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
 		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
+
+		for (int i = 0; i < 5; i++) {
+			System.out.println(favouriteCompanies.get(i));
+			System.out.println(favouriteSectors.get(i));
+		}
 
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
@@ -459,8 +463,13 @@ public class VTA {
 			outputData.add(companyData.get(i));
 			outputData.add(sectorData.get(i));
 		}
-
-		return outputData;
+		String outputDataString = "";
+		for(int i = 0; i < outputData.size();i++){
+			for(int j = 0; j < outputData.get(i).length; j++){
+				outputDataString += outputData.get(i)[j]+"<br />";
+			}
+		}
+		return outputDataString;
 	}
 
 	/**
@@ -472,7 +481,7 @@ public class VTA {
 	 * .
 	 * @return
 	 */
-	public static ArrayList<ArrayList<String[]>> favouritesInRisersFallers() {
+	public static String favouritesInRisersFallers(boolean rise, boolean falls) {
 		ArrayList<String[]> risers = DataBridge.getRisersFallers(true);
 		ArrayList<String[]> fallers = DataBridge.getRisersFallers(false);
 
@@ -494,12 +503,22 @@ public class VTA {
 				favouritesInFallers.add(fallers.get(i));
 			}
 		}
-
-		ArrayList<ArrayList<String[]>> arr = new ArrayList<>();
-		arr.add(favouritesInRisers);
-		arr.add(favouritesInFallers);
-
-		return arr;
+		String outputData = "";
+		if(rise) {
+			for (int i = 0; i < favouritesInRisers.size(); i++) {
+				for (int j = 0; j < favouritesInRisers.get(i).length; j++) {
+					outputData += favouritesInRisers.get(i)[j] + "<br />";
+				}
+			}
+		}
+		else if(falls){
+			for (int i = 0; i < favouritesInFallers.size(); i++) {
+				for (int j = 0; j < favouritesInFallers.get(i).length; j++) {
+					outputData += favouritesInFallers.get(i)[j] + "<br />";
+				}
+			}
+		}
+		return outputData;
 	}
 
 	public static String aiData(){
@@ -712,8 +731,14 @@ public class VTA {
 						return "Done";
 					}
 				}
-			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")){
-				return aiData();
+			} else if (response.getResult().getMetadata().getIntentName().equals("notificationData")) {
+				return aiNews();
+			} else if (response.getResult().getMetadata().getIntentName().equals("favouritesInRisers")) {
+				return favouritesInRisersFallers(true, false);
+			}else if (response.getResult().getMetadata().getIntentName().equals("favouritesInFallers")) {
+				return favouritesInRisersFallers(false, true);
+			} else if (response.getResult().getMetadata().getIntentName().equals("favourites")){
+				return favouritesInRisersFallers(true,true);
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
