@@ -1,120 +1,116 @@
-  <html lang="en"><head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-  <title>chatbot</title>
+<html lang="en">
 
-  <!-- CSS  -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
-  <link href="css/style.css?=3" type="text/css" rel="stylesheet" media="screen,projection">
-
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>chatbot</title>
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css" />
+    <link href="css/style.css?=12" type="text/css" rel="stylesheet" media="screen,projection">
 </head>
+
 <body>
-  <main>
+    <main>
+        <div class="container" style="width: 100%">
+            <!--   Icon Section   -->
+            <div class="row nomargin">
+                <div class="col s12 m4 newsCol">
+                    <div class="icon-block col s12 chatHeader">
+                        <h5 class="center ">News </h5>
+                    </div>
+                    <div class="row nomargin">
+                        <div class="mCustomScrollbar newsOutput">
+<!--                             <div class="card">
+                                <div class="card-content">
+                                    <span class="card-title activator white-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
+                                </div>
+                                <div class="card-reveal">
+                                    <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+                                    <p>Here is some more information about this product that is only revealed once clicked on.</p>
+                                </div>
+                                <div class="card-action">
+                                    <a class="modal-trigger purple-text text-accent-1" href="#modal1">Summary</a>
+                                    <a class="purple-text text-accent-1" href="#">Go to Article</a>
+                                </div>
+                            </div>
+                            <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+                            <div id="modal1" class="modal">
+                                <div class="modal-content">
+                                    <h4>Modal Header</h4>
+                                    <p>A bunch of text</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+                                </div>
+                            </div> -->
+                            
+<div class="loader">Loading...</div>
 
-
-
-    <div class="container" style="width: 100%">
-
-      <!--   Icon Section   -->
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">News</h5>
-          </div>
-          <div class="row">
-            <div class="col s12" >
-              <div class="headlineHolder">
-                <h class="newsHeadline">Sample news headline </h> 
-              </div>
-
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12 m4 centreCol">
+                    <div class="icon-block col s12 chatHeader">
+                        <h5 class="center ">Virtual Trading Assistant    <i class=" medium material-icons">group</i></h5>
+                    </div>
+                    <div class="output col s12">
+                    </div>
+                    
+                          <form class="col s12 queryForm" method="post">
+                            <div class="input-field col s8">
+                                <input name="query" type="text" class="validate">
+                                <label for="query">What can I help you with?</label>
+                            </div>
+                            <div class="center-btn  col s4">
+                                <button class="btn btn-large waves-effect waves-light postMessage" name="register">Submit
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </div>
+                            </form>
+                    <ul class="indicators">
+                        <li class="indicator-item active"></li>
+                    </ul>
+                </div>
+                <div class="col s12 m4">
+                    <div class="icon-block col s12 chatHeader">
+                        <h5 class="center ">Favourites </h5>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="headlineHolder">
+                                <h class="newsHeadline">Sample favourite </h>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="headlineHolder">
+                                <h class="newsHeadline">Sample favourite </h>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col s12" >
-              <div class="headlineHolder">
-                <h class="newsHeadline">Sample news headline </h> 
-              </div>
-
-            </div>
-          </div>
         </div>
-
-        <div class="col s12 m4 centreCol">
-
-
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">Query</h5>
-          </div>
-            <div class="output ">      
+        <!-- Modal Structure -->
+        <div id="registrationModal" class="modal">
+            <div class="modal-content">
+                <h4>Registration Failed</h4>
+                <p>There was a problem with your registration</p>
             </div>
-
-          <form class="col s12 queryForm" method="post" >
-            <div class="input-field col s12">
-              <input name="query" type="text" class="validate">
-              <label for="query">What can I help you with?</label>
+            <div class="modal-footer">
+                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Okay</a>
             </div>
-          </form>
-          <div class="row">
-            <div class="center-btn"><button class="btn deep-purple waves-effect waves-light postMessage"  name="register">Submit
-              <i class="material-icons right">send</i>
-            </button></div>
-          </div>
-
-          <ul class="indicators"><li class="indicator-item active"></li></ul>
-
         </div>
+    </main>
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="js/materialize.js"></script>
+    <script src="js/init.js"></script>
+    <div class="drag-target" data-sidenav="nav-mobile" style="left: 0px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></div>
+</body>
 
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Favouritess</h5>
-
-          </div>
-          <div class="row">
-            <div class="col s12" >
-              <div class="headlineHolder">
-                <h class="newsHeadline">Sample favourite </h> 
-              </div>
-
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s12" >
-              <div class="headlineHolder">
-                <h class="newsHeadline">Sample favourite </h> 
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-
-
-
-    <!-- Modal Structure -->
-    <div id="registrationModal" class="modal">
-      <div class="modal-content">
-        <h4>Registration Failed</h4>
-        <p>There was a problem with your registration</p>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Okay</a>
-      </div>
-    </div>
-  </main>
-
-
-
-  <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="js/materialize.js"></script>
-  <script src="js/init.js"></script>
-
-
-  <div class="hiddendiv common"></div><div class="drag-target" data-sidenav="nav-mobile" style="left: 0px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></div></body></html>
+</html>

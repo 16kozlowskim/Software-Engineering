@@ -19,6 +19,7 @@ package ai.api.examples;
 import ai.api.AIServiceException;
 import ai.api.model.AIResponse;
 import ai.api.web.AIServiceServlet;
+import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -43,7 +44,8 @@ public class newsServlet extends HttpServlet {
       throws ServletException, IOException {
 // try {
       response.setContentType("text/html");
-      response.getWriter().append("freshly baked news");
+      String jsonResponse = new Gson().toJson(VTA.aiNews());
+      response.getWriter().append(jsonResponse);
    // } catch (AIServiceException e) {
    //   e.printStackTrace();
   //  }
