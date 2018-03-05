@@ -204,7 +204,6 @@ public class VTA {
 	 * @param response The chatbot's response to the user's query
 	 */
 	public static String companyQuery(AIResponse response){
-
 		String ticker = "";
 		String data[] = new String[2];
 		JsonArray attributes;
@@ -599,7 +598,7 @@ public class VTA {
 		}
 	}
 
-	public static String rollingAverage(String symbol) {
+	/*public static String rollingAverage(String symbol) {
 		double newAvg = DataBridge.getRollingAverage(symbol);
 
 		double oldAvg = DataStore.getRollingAvg(symbol);
@@ -609,6 +608,34 @@ public class VTA {
 		if (oldAvg == 0) return "SMA: "+newAvg;
 
 		return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
+	}*/
+
+	public static String rollingAverage(AIResponse response) {
+		System.out.println("rollingAverage");
+		String ticker = "";
+		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+			if (parameter.getKey().equals("CompanyName")) {
+				ticker = parameter.getValue().getAsString().replace("\"","");
+				DataStore.incrementCompany(ticker);
+				System.out.println(ticker);
+				double newAvg = DataBridge.getRollingAverage(ticker);
+				System.out.println(newAvg);
+				double oldAvg = 0;
+				try{
+					oldAvg = DataStore.getRollingAvg(ticker);
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				System.out.println(ticker);
+				DataStore.updateRollingAvg(ticker, newAvg);
+
+				if (oldAvg == 0) return "SMA: "+newAvg;
+				System.out.println("SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2));
+				return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
+			}
+		}
+		return "";
 	}
 
 	public static void resetCompanies() throws Exception {
@@ -749,6 +776,8 @@ public class VTA {
 				return favouritesInRisersFallers(false, true);
 			} else if (response.getResult().getMetadata().getIntentName().equals("favourites")){
 				return favouritesInRisersFallers(true,true);
+			} else if (response.getResult().getMetadata().getIntentName().equals("rollingAverage")){
+				return rollingAverage(response);
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {

@@ -129,10 +129,8 @@ public class DataBridge {
 			Process p = Runtime.getRuntime().exec(cmd);
 			try {
 
-				BufferedReader bs = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-				while((s=bs.readLine()) != null){
-					System.out.println(s);
-				}
+
+
 				p.waitFor();
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
