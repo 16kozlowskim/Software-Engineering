@@ -147,19 +147,19 @@ $(function() {
     $('.postMessage').click(function(event) {
 
         console.log("button clicked");
-        var inputText = $('input[name="query"]').val();
-        console.log(inputText.length);
-        if (inputText.length > 0) {
-            $('input[name="query"]').val("");
-            outputMessage('user', inputText);
-            $.post('ai', { query: inputText }, function(data, textStatus, xhr) {
-                /*optional stuff to do after success */
-                console.log(data);
-                outputMessage('helper', data);
-            });
-        } else {
-            console.log("empty input");
-        }
+        // var inputText = $('input[name="query"]').val();
+        // console.log(inputText.length);
+        // if (inputText.length > 0) {
+        //     $('input[name="query"]').val("");
+        //     outputMessage('user', inputText);
+        //     $.post('ai', { query: inputText }, function(data, textStatus, xhr) {
+        //         /*optional stuff to do after success */
+        //         console.log(data);
+        //         outputMessage('helper', data);
+        //     });
+        // } else {
+        //     console.log("empty input");
+        // }
     });
 
     function outputMessage(sender, message) {
