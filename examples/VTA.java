@@ -16,7 +16,6 @@
 
 package ai.api.examples;
 
-import java.sql.Array;
 import java.util.StringJoiner;
 import java.util.Random;
 
@@ -438,34 +437,6 @@ public class VTA {
 		return false;
 	}
 
-	public static String rollingAverage(AIResponse response) {
-		System.out.println("rollingAverage");
-		String ticker = "";
-		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-			if (parameter.getKey().equals("CompanyName")) {
-				ticker = parameter.getValue().getAsString().replace("\"","");
-				DataStore.incrementCompany(ticker);
-				System.out.println(ticker);
-				double newAvg = DataBridge.getRollingAverage(ticker);
-				System.out.println(newAvg);
-				double oldAvg = 0;
-				try{
-					oldAvg = DataStore.getRollingAvg(ticker);
-				}
-				catch (Exception e){
-					e.printStackTrace();
-				}
-				System.out.println(ticker);
-				DataStore.updateRollingAvg(ticker, newAvg);
-
-				if (oldAvg == 0) return "SMA: "+newAvg;
-				System.out.println("SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2));
-				return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
-			}
-		}
-		return "";
-	}
-
 	public static ArrayList<String[]> aiNews() {
 		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(1);
 		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(1);
@@ -627,6 +598,46 @@ public class VTA {
 		}
 	}
 
+	/*public static String rollingAverage(String symbol) {
+		double newAvg = DataBridge.getRollingAverage(symbol);
+
+		double oldAvg = DataStore.getRollingAvg(symbol);
+
+		DataStore.updateRollingAvg(symbol, newAvg);
+
+		if (oldAvg == 0) return "SMA: "+newAvg;
+
+		return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
+	}*/
+
+	public static String rollingAverage(AIResponse response) {
+		System.out.println("rollingAverage");
+		String ticker = "";
+		for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
+			if (parameter.getKey().equals("CompanyName")) {
+				ticker = parameter.getValue().getAsString().replace("\"","");
+				DataStore.incrementCompany(ticker);
+				System.out.println(ticker);
+				double newAvg = DataBridge.getRollingAverage(ticker);
+				System.out.println(newAvg);
+				double oldAvg = 0;
+				try{
+					oldAvg = DataStore.getRollingAvg(ticker);
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
+				System.out.println(ticker);
+				DataStore.updateRollingAvg(ticker, newAvg);
+
+				if (oldAvg == 0) return "SMA: "+newAvg;
+				System.out.println("SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2));
+				return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
+			}
+		}
+		return "";
+	}
+
 	public static void resetCompanies() throws Exception {
 		deleteCompanies();
 		fillCompanies();
@@ -688,9 +699,11 @@ public class VTA {
 
 	}
 
+
 	public static String interpretQuery(AIResponse response){
 		if(start){
 			try {
+				DataStore.fillRollingAvg();
 				resetCompanies();
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -762,8 +775,8 @@ public class VTA {
 				return favouritesInRisersFallers(true, false);
 			}else if (response.getResult().getMetadata().getIntentName().equals("favouritesInFallers")) {
 				return favouritesInRisersFallers(false, true);
-			} else if (response.getResult().getMetadata().getIntentName().equals("favourites")) {
-				return favouritesInRisersFallers(true, true);
+			} else if (response.getResult().getMetadata().getIntentName().equals("favourites")){
+				return favouritesInRisersFallers(true,true);
 			} else if (response.getResult().getMetadata().getIntentName().equals("rollingAverage")){
 				return rollingAverage(response);
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){

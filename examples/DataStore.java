@@ -11,7 +11,7 @@ public class DataStore {
 
 	private static final HashMap<String, String> companyInfo = DataBridge.fillCompany();
 	private static final HashMap<String, String> sectorNumbers = getSectorNumbers();
-	private static HashMap<String, Double> rollingAverage = fillRollingAvg();
+	private static final HashMap<String, Double> rollingAverage = fillRollingAvg();
 
 	public static HashMap<String, Double> fillRollingAvg() {
 
@@ -20,7 +20,7 @@ public class DataStore {
 		companyInfo.forEach((k, v) -> {
 			rolling.put(v, 0.0);
 		});
-
+		System.out.println("Filling companies");
 		return rolling;
 	}
 
@@ -29,6 +29,7 @@ public class DataStore {
 	}
 
 	public static void updateRollingAvg(String symbol, double newAvg) {
+
 		rollingAverage.replace(symbol, newAvg);
 	}
 
@@ -258,7 +259,10 @@ public class DataStore {
 		Connection connection = null;
 		try {
 			// create a database connection
+
 			connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\ai.db");
+			//connection = DriverManager.getConnection("jdbc:sqlite:/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/ai.db");
+
 			return connection;
 		}
 		catch(SQLException e) {
