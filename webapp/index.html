@@ -17,13 +17,34 @@
         <div class="container" style="width: 100%">
             <!--   Icon Section   -->
             <div class="row nomargin">
-                <div class="col s12 m4 newsCol">
+                                <div class="col s12 m4 push-m4 centreCol">
+                    <div class="icon-block col s12 chatHeader">
+                        <h5 class="center ">myVTA  <i class=" medium material-icons">group</i></h5>
+                    </div>
+                    <div class="output text_1vw mCustomScrollbar col s12">
+                    </div>
+                    <form class="col s12 queryForm text_1vw" method="post">
+                        <div class="input-field text_1vw col s8">
+                            <input name="query" type="text" class="validate">
+                            <label for="query">What can I help you with?</label>
+                        </div>
+                        <div class="center-btn  col s4">
+                            <button class="btn btn-large waves-effect waves-light postMessage" name="register">Submit
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+                    <ul class="indicators">
+                        <li class="indicator-item active"></li>
+                    </ul>
+                </div>
+                <div class="col s12 m4  pull-m4 newsCol">
                     <div class="icon-block col s12 chatHeader">
                         <h5 class="center ">News </h5>
                     </div>
                     <div class="row nomargin">
                         <div class="mCustomScrollbar newsOutput">
-<!--                             <div class="card">
+                            <!--                         <div class="card">
                                 <div class="card-content">
                                     <span class="card-title activator white-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
                                 </div>
@@ -46,50 +67,21 @@
                                     <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
                                 </div>
                             </div> -->
-                            
-<div class="loader">Loading...</div>
-
+                            <div class="loader">Loading...</div>
                         </div>
                     </div>
                 </div>
-                <div class="col s12 m4 centreCol">
-                    <div class="icon-block col s12 chatHeader">
-                        <h5 class="center ">Virtual Trading Assistant    <i class=" medium material-icons">group</i></h5>
-                    </div>
-                    <div class="output mCustomScrollbar col s12">
-                    </div>
-                    
-                          <form class="col s12 queryForm" method="post">
-                            <div class="input-field col s8">
-                                <input name="query" type="text" class="validate">
-                                <label for="query">What can I help you with?</label>
-                            </div>
-                            <div class="center-btn  col s4">
-                                <button class="btn btn-large waves-effect waves-light postMessage" name="register">Submit
-                                    <i class="material-icons right">send</i>
-                                </button>
-                            </div>
-                            </form>
-                    <ul class="indicators">
-                        <li class="indicator-item active"></li>
-                    </ul>
-                </div>
+
                 <div class="col s12 m4">
                     <div class="icon-block col s12 chatHeader">
                         <h5 class="center ">Favourites </h5>
                     </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="headlineHolder">
-                                <h class="newsHeadline">Sample favourite </h>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="headlineHolder">
-                                <h class="newsHeadline">Sample favourite </h>
-                            </div>
+                    <div class="row nomargin">
+                        <div class="mCustomScrollbar favOutput company">
+                            <div class="card favCard companies"><div class="card-content"><span class="card-title activator white-text ">Favourite Companies</span>
+                                <div class="tableholder1">  <div class="loader">Loading...</div> </div></div><div class="card-action"></div></div>
+                                <div class="card favCard sectors"><div class="card-content"><span class="card-title activator white-text ">Favourite Sectors</span>
+                                <div class="tableholder2">  <div class="loader">Loading...</div> </div></div><div class="card-action"></div></div>
                         </div>
                     </div>
                 </div>

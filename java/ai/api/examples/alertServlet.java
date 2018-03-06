@@ -34,26 +34,26 @@ import java.io.IOException;
  */
 @WebServlet(urlPatterns = {"/alertServlet"})
 public class alertServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-  //  try {
-      response.setContentType("text/html");
-      response.getWriter().append("new alert");
-   // } catch (AIServiceException e) {
-  //    e.printStackTrace();
-   // }
-  }
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //  try {
+        response.setContentType("text/html");
+        response.getWriter().append(VTA.aiData());
+        // } catch (AIServiceException e) {
+        //    e.printStackTrace();
+        // }
+    }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-   */
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    doGet(request, response);
-  }
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
 }
