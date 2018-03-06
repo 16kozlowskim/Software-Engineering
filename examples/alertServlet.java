@@ -43,7 +43,7 @@ public class alertServlet extends HttpServlet {
             throws ServletException, IOException {
         //  try {
         response.setContentType("text/html");
-        response.getWriter().append("");
+        response.getWriter().append(VTA.aiData());
         // } catch (AIServiceException e) {
         //    e.printStackTrace();
         // }

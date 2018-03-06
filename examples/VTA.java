@@ -200,6 +200,58 @@ public class VTA {
 	}
 
 	/**
+	 * Converts attributes to their index for current company queries
+	 * @param attribute The attribute to be converted
+	 * @return the index of the given attribute
+	 */
+	public static int getIndexOfAttribute4(String attribute) {
+		attribute = attribute.replace("\"","");
+		if (attribute.toLowerCase().equals("price")) {
+			return 0;
+		}
+		if (attribute.toLowerCase().equals("absolute change")) {
+			return 1;
+		}
+		if (attribute.toLowerCase().equals("percentage change")) {
+			return 2;
+		}
+		if (attribute.toLowerCase().equals("day low-high") || attribute.toLowerCase().equals("day low") || attribute.toLowerCase().equals("day high")) {
+			return 3;
+		}
+		if (attribute.toLowerCase().equals("52 low-high")) {
+			return 4;
+		}
+		if (attribute.toLowerCase().equals("open")) {
+			return 5;
+		}
+		if (attribute.toLowerCase().equals("volume")) {
+			return 6;
+		}
+		if (attribute.toLowerCase().equals("market cap")) {
+			return 7;
+		}
+		if (attribute.toLowerCase().equals("pe ratio")) {
+			return 8;
+		}
+		if (attribute.toLowerCase().equals("dividend yield")) {
+			return 9;
+		}
+		if (attribute.toLowerCase().equals("earnings per share")) {
+			return 10;
+		}
+		if (attribute.toLowerCase().equals("shares outstanding")) {
+			return 11;
+		}
+		if (attribute.toLowerCase().equals("beta")) {
+			return 12;
+		}
+		if (attribute.toLowerCase().equals("institutional ownership")) {
+			return 13;
+		}
+		return 14;
+	}
+
+	/**
 	 * Handles current company queries
 	 * @param response The chatbot's response to the user's query
 	 */
@@ -228,7 +280,7 @@ public class VTA {
 					String[] companyData = DataBridge.getCompanyData(ticker);
 					for(int i = 0; i < favouriteAttributes.size(); i++){
 						try{
-							outputData += favouriteAttributes.get(i)+": "+companyData[getIndexOfAttribute2(favouriteAttributes.get(i))]+"<br />";
+							outputData += favouriteAttributes.get(i)+": "+companyData[getIndexOfAttribute4(favouriteAttributes.get(i))]+"<br />";
 						}catch(IndexOutOfBoundsException e){
 
 						}
@@ -243,6 +295,9 @@ public class VTA {
 					return outputData;
 				}
 			}
+		}
+		if(ticker.equals("")){
+			return response.getResult().getFulfillment().getSpeech();
 		}
 		String outputData = response.getResult().getFulfillment().getSpeech()+": " +"<br />";
 		for (int i = 0; i < 2; i++) {
@@ -376,11 +431,14 @@ public class VTA {
 				top = parameter.getValue().getAsInt();
 				ArrayList<String[]> data = DataBridge.getRisersFallers(risers);
 				for (int i = 0; i < data.size() && i < top; i++) {
-					for (int j = 0; j < data.get(i).length; j++) {
-						System.out.print(data.get(i)[j]);
-						outputData += data.get(i)[j];
+					if (data.get(i) != null) {
+						outputData += data.get(i)[1]+" ("+data.get(i)[0]+"): "+"<br />";
+						try{
+							outputData += "Price: "+data.get(i)[2]+" Absolute Change:"+data.get(i)[3]+" Percentage Change: "+data.get(i)[4];
+						} catch(Exception e){
+							e.printStackTrace();
+						}
 					}
-					System.out.println();
 					outputData += "<br />";
 				}
 			}
@@ -436,22 +494,22 @@ public class VTA {
 		}
 		return false;
 	}
+
 	public static ArrayList<String[]> aiNews() {
-		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(1);
-		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(1);
+		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(5);
+		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(5);
 
 		ArrayList<String[]> companyData = new ArrayList<>();
 		ArrayList<String[]> sectorData = new ArrayList<>();
 
 		for (String search : favouriteCompanies) {
-			companyData.add(DataBridge.getNews(search, true, 5));
+			companyData.add(DataBridge.getNews(search, true, 1));
 		}
 		for (String search : favouriteSectors) {
-			sectorData.add(DataBridge.getNews(search, false, 5));
+			sectorData.add(DataBridge.getNews(search, false, 1));
 		}
 
 		ArrayList<String[]> outputData = new ArrayList<>();
-		System.out.println("companyData.size(): "+companyData.size());
 		for (int i = 0; i < companyData.size(); i++) {
 			outputData.add(companyData.get(i));
 			outputData.add(sectorData.get(i));
@@ -500,19 +558,15 @@ public class VTA {
 		}
 		String outputData = "";
 		if(rise) {
+			outputData += "Rising: <br/>";
 			for (int i = 0; i < favouritesInRisers.size(); i++) {
 				outputData += favouritesInRisers.get(i)[1]+" ("+favouritesInRisers.get(i)[0]+"): Price:"+favouritesInRisers.get(i)[2]+" Day Change:"+favouritesInRisers.get(i)[3]+", "+favouritesInRisers.get(i)[4]+"<br />";
-				for (int j = 0; j < favouritesInRisers.get(i).length; j++) {
-					outputData += favouritesInRisers.get(i)[j] + "<br />";
-				}
 			}
 		}
 		if(falls){
+			outputData += "Falling: <br/>";
 			for (int i = 0; i < favouritesInFallers.size(); i++) {
-				for (int j = 0; j < favouritesInFallers.get(i).length; j++) {
-					outputData += favouritesInFallers.get(i)[j] +" ";
-				}
-				outputData+="<br />";
+				outputData += favouritesInFallers.get(i)[1]+" ("+favouritesInFallers.get(i)[0]+"): Price:"+favouritesInFallers.get(i)[2]+" Day Change:"+favouritesInFallers.get(i)[3]+", "+favouritesInFallers.get(i)[4]+"<br />";
 			}
 		}
 		return outputData;
@@ -529,7 +583,7 @@ public class VTA {
 			String[] companyData = DataBridge.getCompanyData(companies.get(i));
 			for(int j = 0; j < favouriteAttributes.size(); j++) {
 				try {
-					outputData += "<td>"+companyData[getIndexOfAttribute2(favouriteAttributes.get(j))]+"</td>";
+					outputData += "<td>"+companyData[getIndexOfAttribute4(favouriteAttributes.get(j))]+"</td>";
 				} catch (IndexOutOfBoundsException e) {
 
 				}
@@ -575,8 +629,8 @@ public class VTA {
 
 			String[] data = DataBridge.getCompanyData(company);
 			try{
-				System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)]);
-				return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute2(attribute)];
+				System.out.println("The "+attribute+" of "+company+" is "+data[getIndexOfAttribute4(attribute)]);
+				return "The "+attribute+" of "+company+" is "+data[getIndexOfAttribute4(attribute)];
 			} catch(IndexOutOfBoundsException e){
 				return notificationData();
 			}
@@ -596,18 +650,6 @@ public class VTA {
 			return outputData;
 		}
 	}
-
-	/*public static String rollingAverage(String symbol) {
-		double newAvg = DataBridge.getRollingAverage(symbol);
-
-		double oldAvg = DataStore.getRollingAvg(symbol);
-
-		DataStore.updateRollingAvg(symbol, newAvg);
-
-		if (oldAvg == 0) return "SMA: "+newAvg;
-
-		return "SMA: "+newAvg+" Change since last query: "+((newAvg-oldAvg)/2);
-	}*/
 
 	public static String rollingAverage(AIResponse response) {
 		System.out.println("rollingAverage");
@@ -709,7 +751,6 @@ public class VTA {
 			start = false;
 		}
 		if (response.getStatus().getCode() == 200) {
-			System.out.println(response.getResult().getFulfillment().getSpeech());
 			if (response.getResult().getMetadata().getIntentName().equals("CompanyQuery")) {
 				if (checkDate(response)) {
 					return companyDateQuery(response);
@@ -724,13 +765,13 @@ public class VTA {
 				}
 			} else if (response.getResult().getMetadata().getIntentName().equals("CompanyOrSectorQueryContext")) {
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
+					if (parameter.getKey().equals("CompanyName")) {
 						if (checkDate(response)) {
 							return companyDateQuery(response);
 						} else {
 							return companyQuery(response);
 						}
-					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
+					} else if (parameter.getKey().equals("Sectors")) {
 						System.out.println("This is a sector context query");
 						if (checkDate(response)) {
 							return sectorDateQuery(response);
@@ -749,7 +790,6 @@ public class VTA {
 			} else if (response.getResult().getMetadata().getIntentName().equals("Bottom")) {
 				return risersOrFallers(response,false);
 			} else if (response.getResult().getMetadata().getIntentName().equals("UpdateFrequency")) {
-				System.out.println("This is a frequency update");
 				return "This is a frequency update";
 			} else if (response.getResult().getMetadata().getIntentName().equals("ResetFavourites")) {
 				try {
@@ -780,13 +820,13 @@ public class VTA {
 			} else if (response.getResult().getMetadata().getIntentName().equals("doingWell")){
 				String data = "";
 				for (Entry<String, JsonElement> parameter : response.getResult().getParameters().entrySet()) {
-					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("") || parameter.getKey().equals("CompanyNameContext") && !parameter.getValue().equals("")) {
+					if (parameter.getKey().equals("CompanyName") && !parameter.getValue().equals("")) {
 						DataStore.incrementCompany(parameter.getValue().getAsString());
 						data = DataBridge.getCompanyData(parameter.getValue().getAsString())[getIndexOfAttribute2("percentage change")];
-						if(data.charAt(0)=='+'){
-							return parameter.getValue().toString()+" is doing well with a rise of "+data.substring(1);
+						if(!(data.charAt(1)=='-')){
+							return parameter.getValue().toString()+" is doing well with a rise of "+data;
 						}
-						else return parameter.getValue()+"is not doing well falling at "+data;
+						else return parameter.getValue().toString()+" is not doing well falling at "+data;
 					} else if (parameter.getKey().equals("Sectors") && !parameter.getValue().equals("")) {
 						DataStore.incrementSector(parameter.getValue().getAsString());
 						ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(parameter.getValue().getAsString().replace("\"","")));
@@ -800,7 +840,7 @@ public class VTA {
 								}
 								else negative = true;
 								outputData += sectorData.get(i)[1]+" ("+sectorData.get(i)[0]+"): "+"<br />";
-								outputData += sectorData.get(i)[getIndexOfAttribute3("percentage change")];
+								outputData += sectorData.get(i)[4];
 							}
 							outputData += "<br />";
 						}
@@ -812,6 +852,7 @@ public class VTA {
 				}
 				return "Sorry, I didn't catch that";
 			}
+			System.out.println(response.getResult().getFulfillment().getSpeech());
 			return response.getResult().getFulfillment().getSpeech();
 		} else {
 			System.err.println(response.getStatus().getErrorDetails());
