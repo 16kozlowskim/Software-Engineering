@@ -78,8 +78,8 @@ public class DataBridge {
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
 			}
-			FileReader file = new FileReader(csvFile);
-			BufferedReader stdInput = new BufferedReader(file);
+			File file = new File(csvFile);
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
 
 			int i = 0;
 			while ((s = stdInput.readLine()) != null) {
@@ -89,7 +89,6 @@ public class DataBridge {
 				}
 			}
 			stdInput.close();
-			file.close();
 		} catch (IOException e) {
 			System.out.print(e.getMessage());
 		}
@@ -117,7 +116,6 @@ public class DataBridge {
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
 			try {
-				System.out.println("Alive:"+p.isAlive());
 				BufferedReader bs = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 				while((s=bs.readLine()) != null){
 					System.out.println(s);
@@ -227,7 +225,6 @@ public class DataBridge {
 		else symbol += ".uk";
 
 		String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
-		System.out.println(cmd);
 		String s = "";
 		String csvSplitBy = "@";
 		String[] data = new String[6];
