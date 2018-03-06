@@ -436,7 +436,6 @@ public class VTA {
 		}
 		return false;
 	}
-
 	public static ArrayList<String[]> aiNews() {
 		ArrayList<String> favouriteCompanies = DataStore.getFavouriteCompanies(1);
 		ArrayList<String> favouriteSectors = DataStore.getFavouriteSectors(1);
