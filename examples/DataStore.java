@@ -89,6 +89,7 @@ public class DataStore {
 	}
 
 	public static void initDB() throws SQLException {
+
 		Connection conn = getConnection();
 		Statement s = conn.createStatement();
 
@@ -99,6 +100,7 @@ public class DataStore {
 			resetDB();
 		}
 		conn.close();
+
 	}
 
 	public static ArrayList<String> getFavouriteCompanies(int num) {
@@ -260,7 +262,10 @@ public class DataStore {
 			// create a database connection
 
 			//connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\ai.db");
-			connection = DriverManager.getConnection("jdbc:sqlite:/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/ai.db");
+			//connection = DriverManager.getConnection("jdbc:sqlite:/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/ai.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:"+ System.getProperty("catalina.base") + "/bin/misc/ai.db");
+			//connection = DriverManager.getConnection("jdbc:sqlite:"+ System.getProperty("catalina.base") + "\\bin\\misc\\ai.db");
+
 
 			return connection;
 		}

@@ -7,7 +7,9 @@ public class DataBridge {
 
 
 	//private static final String csvFile = "C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv";
-	private static final String csvFile = "/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/fileStore/file.csv";
+	private static final String csvFile = System.getProperty("catalina.base") + "/bin/misc/file.csv";
+	//private static final String csvFile = System.getProperty("catalina.base") + "\\bin\\misc\\file.csv";
+
 
 
 
@@ -17,7 +19,9 @@ public class DataBridge {
 		symbol = symbol.toUpperCase();
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\rolling.py "+ symbol;
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/rolling.py " + symbol;
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/rolling.py " + symbol;
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\rolling.py " + symbol;
+
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -72,7 +76,9 @@ public class DataBridge {
 		else query = "lon:" + search;
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\news.py " + query + " " + num;
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/news.py " + query + " " + num;
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/news.py " + query + " " + num;
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/news.py " + query + " " + num;
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\news.py " + query + " " + num;
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -85,7 +91,7 @@ public class DataBridge {
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
 			}
-			FileReader file = new FileReader(csvFile);
+			FileReader file = new FileReader(System.getProperty("catalina.base") + "/bin/misc/news.csv");
 			BufferedReader stdInput = new BufferedReader(file);
 
 			int i = 0;
@@ -118,8 +124,9 @@ public class DataBridge {
 	public static String[] getCompanyData(String ticker) {
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\googScraper.py "+ticker;
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/googScraper.py " +ticker;
-
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/googScraper.py " +ticker;
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/googScraper.py " + ticker;
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\googScraper.py " + ticker;
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -128,9 +135,6 @@ public class DataBridge {
 		try {
 			Process p = Runtime.getRuntime().exec(cmd);
 			try {
-
-
-
 				p.waitFor();
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
@@ -164,10 +168,15 @@ public class DataBridge {
 		if (getRisers)
 
 			//cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\risersFallers.py risers";
-			cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/risersFallers.py risers";
+			//cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/risersFallers.py risers";
+			cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/risersFallers.py risers";
+			//cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\risersFallers.py risers";
 		else
 			//cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\risersFallers.py fallers";
-			cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/risersFallers.py fallers";
+			//cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/risersFallers.py fallers";
+			cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/risersFallers.py fallers";
+			//cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\risersFallers.py fallers";
+
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -199,7 +208,9 @@ public class DataBridge {
 	public static HashMap<String, String> fillCompany() {
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\ftseTickerCompanies.py";
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/ftseTickerCompanies.py";
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/ftseTickerCompanies.py";
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/ftseTickerCompanies.py";
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\ftseTickerCompanies.py";
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -243,7 +254,10 @@ public class DataBridge {
 		else symbol += ".uk";
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\historicalScrape.py " + symbol + " " + interval + " " + date + " " + date;
+
 
 		String s = "";
 		String csvSplitBy = "@";
@@ -284,7 +298,9 @@ public class DataBridge {
 
 
 		//String cmd = "C:\\Python27\\python C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\scraper\\sectorsScraper.py " + sectorNum;
-		String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/sectorsScraper.py " + sectorNum;
+		//String cmd = "/usr/bin/python /Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/scraper/sectorsScraper.py " + sectorNum;
+		String cmd = "/usr/bin/python " + System.getProperty("catalina.base") + "/bin/misc/scraper/sectorsScraper.py " + sectorNum;
+		//String cmd = "C:\\Python27\\python " + System.getProperty("catalina.base") + "\\bin\\misc\\scraper\\sectorsScraper.py " + sectorNum;
 
 		String s = "";
 		String csvSplitBy = "@";
