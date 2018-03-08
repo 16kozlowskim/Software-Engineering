@@ -3,6 +3,7 @@ $(function() {
     var modelOpen = false;
     var needToUpdate = false;
     var lastAlertData;
+    var alertPollTimeout;
     $('.modal').modal({
         ready: function(modal, trigger) {
             var iframeId = 'iframe_' + modal.attr('id').slice(5);
@@ -20,11 +21,11 @@ $(function() {
 
 
     //polling for alerts
-    var alertPollSeconds = 20;
+    var alertPollSeconds = 10;
     var newsPollSeconds = 35;
 
 
-    (function pollForAlerts() {
+    function pollForAlerts() {
         console.log('polling for alerts');
         var startTime = new Date().getTime();
         var responseTime;
@@ -100,19 +101,20 @@ $(function() {
                     lastAlertData = data;
 
                 } //if data end
-                setTimeout(pollForAlerts, 1000 * alertPollSeconds);
+                alertPollTimeout = setTimeout(pollForAlerts, 1000 * alertPollSeconds);
             }) //callback end
             .fail(function() {
                 responseTime = new Date().getTime() - startTime;
                 console.log('request failed');
-                setTimeout(pollForAlerts, 5000);
+                alertPollTimeout = setTimeout(pollForAlerts, 5000);
             })
             .always(function() { //this runs regardless of whether the request was succesful or not
                 console.log('alert response retrieved after ' + responseTime / 1000 + ' seconds');
 
             }); //callback end
 
-    }());
+    }
+    pollForAlerts();
 
     //polling for news and stuff 
 
@@ -225,8 +227,39 @@ $(function() {
         event.preventDefault();
         console.log("form submit intercepted");
         var inputText = $('input[name="query"]').val();
+        var numbers
         if (inputText.length > 0) {
             $('input[name="query"]').val("");
+
+            if(inputText.toLowerCase().indexOf("notification") != -1) {
+                if(inputText.toLowerCase().indexOf("min") != -1) {
+                    console.log("made it");
+                         numbers = inputText.match(/\d+/g).map(Number);
+                        if(numbers[numbers.length-1] > 0 ) {
+                        alertPollSeconds = numbers[numbers.length-1]*60;
+                        console.log('alertpollseconds now'+alertPollSeconds);
+                        clearTimeout(alertPollTimeout);
+                        pollForAlerts();
+                    }
+
+                }
+
+                if(inputText.toLowerCase().indexOf("sec") != -1) {
+                    console.log("made it");
+                         numbers = inputText.match(/\d+/g).map(Number);
+                        if(numbers[numbers.length-1] > 0 ) {
+                        alertPollSeconds = numbers[numbers.length-1];
+                        console.log('alertpollseconds now'+alertPollSeconds);
+                        clearTimeout(alertPollTimeout);
+                        pollForAlerts();
+                    }
+
+                }                
+               // if(inputText.contains("sec")) {
+
+               // }
+            }
+
             outputMessage('user', inputText);
             $.post('ai', { query: inputText }, function(data, textStatus, xhr) {
                 /*optional stuff to do after success 
@@ -285,8 +318,10 @@ $(function() {
 
         $('.output .mCSB_container').append(newMessage);
 
-        newMessage.show('slow', function() {});
-        $('.output').mCustomScrollbar('scrollTo', 'bottom');
+        newMessage.show('slow', function() {
+            $('.output').mCustomScrollbar('scrollTo', 'bottom');
+        });
+        
 
         // $(".output .mCSB_container").stop().animate({ scrollTop: $(".output")[0].scrollHeight }, 1000);
 
