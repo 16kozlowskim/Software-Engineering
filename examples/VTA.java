@@ -76,10 +76,16 @@ public class VTA {
 		}
 
 		//Set up database
+		System.out.println("help");
 		try {
 			DataStore.initDB();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+		try {
+			DataStore.resetDB();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {

@@ -11,7 +11,9 @@ def get_rss(search):
 def get_data(rss, num):
 
     #pathToCSV = '/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/fileStore/file.csv'
-    pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
+    #pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
+    #pathToCSV = '/Users/Michal/Desktop/apache-tomcat-8.5.28/bin/misc/file.csv'
+    pathToCSV = 'C:\\apache-tomcat-8.5.28\\bin\\misc\\file.csv'
 
     with open(pathToCSV, 'w') as csvfile:
         wr = csv.writer(csvfile, delimiter='@', quotechar='#')
@@ -33,14 +35,12 @@ def get_data(rss, num):
 
 
                 if sent[0] < 0 :
-                   sent = 50 - (sent[0]*-50)
+                    sent = 50 - (sent[0]*-50)
                 else :
-                   sent = sent[0]*50 + 50
+                    sent = sent[0]*50 + 50
 
 
                 wr.writerow([str(round(sent, 2))+'%'])
-                #wr.writerow(['987'])
-
             except TypeError:
                 wr.writerow(['Sentiment Unavailable'])
 
