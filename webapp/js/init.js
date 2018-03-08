@@ -4,6 +4,7 @@ $(function() {
     var needToUpdate = false;
     var lastAlertData;
     var alertPollTimeout;
+    var newsPollTimeout;
     $('.modal').modal({
         ready: function(modal, trigger) {
             var iframeId = 'iframe_' + modal.attr('id').slice(5);
@@ -77,7 +78,7 @@ $(function() {
                                 }
                                 if ($(this).text().charAt(0) == '-') {
                                     console.log('bingo');
-                                    $(this).addClass('red-text');
+                                    $(this).addClass('myRed');
                                 }
                             });
                            $('.tableHolder1, .tableHolder2').fadeIn(1500, function() {
@@ -115,10 +116,11 @@ $(function() {
 
     }
     pollForAlerts();
+    pollForNews();
 
     //polling for news and stuff 
 
-    (function pollForNews() {
+    function pollForNews() {
         console.log('sending request for news');
         var startTime = new Date().getTime();
         var responseTime;
@@ -149,7 +151,7 @@ $(function() {
                         '<div class="card-action text_125rem">' +
                         '<a class="purple-text text-accent-1" href="#modal' + i + '">Summary</a>' +
                         '<a class="purple-text text-accent-1" href="' + json[i][1] + '">Go to Article</a>' +
-                        '<span class="sentimentText ' + colourClass + '">SMA: ' + json[i][2] + '</span>' +
+                        '<span class="sentimentText ' + colourClass + '">Sentiment: ' + json[i][2] + '</span>' +
                         '</div>' +
                         '</div>';
 
@@ -161,7 +163,6 @@ $(function() {
                         '<div class="box"><iframe id="iframe_' + i + '"" src="" width = "95%" height = "80%"  sandbox="allow-forms allow-scripts" ></iframe></div>' +
                         '</div>' +
                         '<div class="modal-footer">' +
-                        '<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Read More!</a>' +
                         '</div>' +
                         '</div>';
                 }
@@ -205,7 +206,7 @@ $(function() {
                 if (parseFloat($('.sentimentText').val()) < 0.5) {
                     $('.sentimentText').addClass('red-text')
                 }
-                setTimeout(pollForNews, 1000 * newsPollSeconds);
+               newsPollTimeout = setTimeout(pollForNews, 1000 * newsPollSeconds);
             })
             .fail(function() {
                 responseTime = new Date().getTime() - startTime;
@@ -220,7 +221,7 @@ $(function() {
 
 
 
-    }());
+    };
 
     //when enter is pressed on the input
     $(".queryForm").submit(function(event) {
@@ -260,6 +261,34 @@ $(function() {
                // }
             }
 
+            if(inputText.toLowerCase().indexOf("news") != -1) {
+                if(inputText.toLowerCase().indexOf("min") != -1) {
+                    console.log("made it alert");
+                         numbers = inputText.match(/\d+/g).map(Number);
+                        if(numbers[numbers.length-1] > 0 ) {
+                        alertPollSeconds = numbers[numbers.length-1]*60;
+                        console.log('alertpollseconds now'+alertPollSeconds);
+                        clearTimeout(alertPollTimeout);
+                        pollForNews();
+                    }
+
+                }
+
+                if(inputText.toLowerCase().indexOf("sec") != -1) {
+                    console.log("made it news ");
+                         numbers = inputText.match(/\d+/g).map(Number);
+                        if(numbers[numbers.length-1] > 0 ) {
+                        alertPollSeconds = numbers[numbers.length-1];
+                        console.log('alertnewsseconds now '+alertPollSeconds);
+                        clearTimeout(alertPollTimeout);
+                        pollForNews();
+                    }
+
+                }
+               // if(inputText.contains("sec")) {
+
+               // }
+            }
             outputMessage('user', inputText);
             $.post('ai', { query: inputText }, function(data, textStatus, xhr) {
                 /*optional stuff to do after success 
