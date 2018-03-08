@@ -11,7 +11,7 @@ public class DataStore {
 
 	private static final HashMap<String, String> companyInfo = DataBridge.fillCompany();
 	private static final HashMap<String, String> sectorNumbers = getSectorNumbers();
-	private static final HashMap<String, Double> rollingAverage = fillRollingAvg();
+	private static HashMap<String, Double> rollingAverage = fillRollingAvg();
 
 	public static HashMap<String, Double> fillRollingAvg() {
 
@@ -20,7 +20,7 @@ public class DataStore {
 		companyInfo.forEach((k, v) -> {
 			rolling.put(v, 0.0);
 		});
-		System.out.println("Filling companies");
+
 		return rolling;
 	}
 
@@ -29,7 +29,6 @@ public class DataStore {
 	}
 
 	public static void updateRollingAvg(String symbol, double newAvg) {
-
 		rollingAverage.replace(symbol, newAvg);
 	}
 
@@ -90,6 +89,7 @@ public class DataStore {
 	}
 
 	public static void initDB() throws SQLException {
+
 		Connection conn = getConnection();
 		Statement s = conn.createStatement();
 
@@ -100,6 +100,7 @@ public class DataStore {
 			resetDB();
 		}
 		conn.close();
+
 	}
 
 	public static ArrayList<String> getFavouriteCompanies(int num) {
@@ -109,7 +110,7 @@ public class DataStore {
 
 		try {
 			s = conn.createStatement();
-			String query = "select name from company order by count desc limit " + num;
+			String query = "select name from company where count > 0 order by count desc limit " + num;
 			ResultSet rs = s.executeQuery(query);
 
 			while (rs.next()) {
@@ -130,7 +131,7 @@ public class DataStore {
 		try {
 			s = conn.createStatement();
 
-			String query = "select name from sector order by count desc limit " + num;
+			String query = "select name from sector where count > 0 order by count desc limit " + num;
 			ResultSet rs = s.executeQuery(query);
 
 			while (rs.next()) {
@@ -260,8 +261,11 @@ public class DataStore {
 		try {
 			// create a database connection
 
-			connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\ai.db");
+			//connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\ai.db");
 			//connection = DriverManager.getConnection("jdbc:sqlite:/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/ai.db");
+			//connection = DriverManager.getConnection("jdbc:sqlite:"+ System.getProperty("catalina.base") + "/bin/misc/ai.db");
+			connection = DriverManager.getConnection("jdbc:sqlite:"+ System.getProperty("catalina.base") + "\\bin\\misc\\ai.db");
+
 
 			return connection;
 		}

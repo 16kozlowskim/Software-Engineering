@@ -5,8 +5,12 @@ from bs4 import BeautifulSoup
 def get_ftse_companies():
 
 
-    pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
+    #pathToCSV = 'C:\\Users\\ojwoo\\Documents\\Warwick\\CS261\\Coursework\\dialogflow-java-client-master\\samples\\clients\\VirtualTradingAssistant\\src\\main\\java\\ai\\api\\examples\\fileStore\\file.csv'
     #pathToCSV = '/Users/Michal/Downloads/dialogflow-java-client-master2/samples/clients/VirtualTradingAssistant/src/main/java/ai/api/examples/fileStore/file.csv'
+    #pathToCSV = '/Users/Michal/Desktop/apache-tomcat-8.5.28/bin/misc/file.csv'
+    pathToCSV = 'C:\\apache-tomcat-8.5.28\\bin\\misc\\file.csv'
+
+
 
     url = 'http://www.hl.co.uk/shares/stock-market-summary/ftse-100'
 

@@ -108,15 +108,14 @@ public class VTA {
 	 * @return the index of the given attribute
 	 */
 	public static int getIndexOfAttribute(String attribute) {
-		DataStore.incrementAttribute(attribute);
 		attribute = attribute.replace("\"","");
 		if (attribute.toLowerCase().equals("open") || attribute.toLowerCase().equals("price")) {
 			return 1;
 		}
-		if (attribute.toLowerCase().equals("high")) {
+		if (attribute.toLowerCase().equals("day high")) {
 			return 2;
 		}
-		if (attribute.toLowerCase().equals("low")) {
+		if (attribute.toLowerCase().equals("day low")) {
 			return 3;
 		}
 		if (attribute.toLowerCase().equals("close")) {
@@ -329,7 +328,7 @@ public class VTA {
 				attributes = parameter.getValue().getAsJsonArray();
 				for (int i = 0; i < attributes.size(); i++) {
 					try {
-						data[i] = DataBridge.getHistoricalData(ticker, "d", date)[getIndexOfAttribute(attributes.get(i).getAsString())];
+						data[i] = DataBridge.getHistoricalData(ticker, "d", date)[getIndexOfAttribute(attributes.get(i).toString())];
 					} catch (IndexOutOfBoundsException e) {
 						data[i] = "Sorry, I couldn't find that for you";
 					}
@@ -343,9 +342,9 @@ public class VTA {
 			}
 		}
 		String outputData = response.getResult().getFulfillment().getSpeech()+": "+"<br />";
+		if(data[0] == null && data[1] == null) return "Sorry, that seems to be an invalid date";
 		for (int i = 0; i < 2; i++) {
 			if (data[i] != null) {
-				System.out.println(data[i]);
 				outputData += data[i] + "<br />";
 			}
 		}
@@ -510,9 +509,9 @@ public class VTA {
 		}
 
 		ArrayList<String[]> outputData = new ArrayList<>();
-		for (int i = 0; i < companyData.size(); i++) {
-			outputData.add(companyData.get(i));
-			outputData.add(sectorData.get(i));
+		for (int i = 0; i < companyData.size() || i < sectorData.size(); i++) {
+			if (i < companyData.size()) outputData.add(companyData.get(i));
+			if(i < sectorData.size()) outputData.add(sectorData.get(i));
 		}
 		return outputData;
 		/*String outputDataString = "";
@@ -558,13 +557,19 @@ public class VTA {
 		}
 		String outputData = "";
 		if(rise) {
-			outputData += "Rising: <br/>";
+			if(favouritesInRisers.size()==0) outputData += "No favourites are in the top 20 risers<br />";
+			else outputData += "Rising: <br/>";
 			for (int i = 0; i < favouritesInRisers.size(); i++) {
-				outputData += favouritesInRisers.get(i)[1]+" ("+favouritesInRisers.get(i)[0]+"): Price:"+favouritesInRisers.get(i)[2]+" Day Change:"+favouritesInRisers.get(i)[3]+", "+favouritesInRisers.get(i)[4]+"<br />";
+				try{
+					outputData += favouritesInRisers.get(i)[1]+" ("+favouritesInRisers.get(i)[0]+"): Price:"+favouritesInRisers.get(i)[2]+" Day Change:"+favouritesInRisers.get(i)[3]+", "+favouritesInRisers.get(i)[4]+"<br />";
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 		}
 		if(falls){
-			outputData += "Falling: <br/>";
+			if(favouritesInFallers.size()==0) outputData += "No favourites are in the bottom 20 fallers<br />";
+			else outputData += "Falling: <br/>";
 			for (int i = 0; i < favouritesInFallers.size(); i++) {
 				outputData += favouritesInFallers.get(i)[1]+" ("+favouritesInFallers.get(i)[0]+"): Price:"+favouritesInFallers.get(i)[2]+" Day Change:"+favouritesInFallers.get(i)[3]+", "+favouritesInFallers.get(i)[4]+"<br />";
 			}
@@ -790,7 +795,7 @@ public class VTA {
 			} else if (response.getResult().getMetadata().getIntentName().equals("Bottom")) {
 				return risersOrFallers(response,false);
 			} else if (response.getResult().getMetadata().getIntentName().equals("UpdateFrequency")) {
-				return "This is a frequency update";
+				return "Complete";
 			} else if (response.getResult().getMetadata().getIntentName().equals("ResetFavourites")) {
 				try {
 					DataStore.resetDB();
