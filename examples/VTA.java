@@ -262,6 +262,7 @@ public class VTA {
 			if (parameter.getKey().equals("CompanyName")){
 				ticker = parameter.getValue().getAsString();
 				DataStore.incrementCompany(ticker);
+				if(ticker.equals("")) return response.getResult().getFulfillment().getSpeech();
 			}
 			if(ticker.equals("")) break;
 			if (parameter.getKey().equals("Attributes")) {
@@ -371,9 +372,7 @@ public class VTA {
 				attributes = parameter.getValue().getAsJsonArray();
 			}
 		}
-		for (int j = 0; j < attributes.size(); j++) {
-			DataStore.incrementAttribute(attributes.get(j).getAsString());
-		}
+
 		if(attributes.size()==0){
 			ArrayList<String[]> sectorData = DataBridge.getSectorData(DataStore.getSectorNum(ticker));
 			String outputData = ticker+": <br />";
